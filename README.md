@@ -1,7 +1,7 @@
 # Pushpop
 [![Build Status](https://travis-ci.org/keenlabs/pushpop.svg)](https://travis-ci.org/keenlabs/pushpop)
 
-### Automated delivery of analytics reports and notifications
+### Automated delivery of analytics reports and alerts
 
 <hr>
 <img src="http://f.cl.ly/items/1I421w263a10340a0u2q/Screen%20Shot%202014-04-16%20at%204.35.47%20PM.png" width="45%" alt="Pingpong Daily Response Time Report">
@@ -11,13 +11,13 @@
 
 ## Overview
 
-Pushpop is a simple, deploy-in-minutes Ruby app that sends emails and notifications in response to events you're capturing with Keen IO.
+Pushpop is a simple, powerful Ruby app that sends notifications in response to events you're capturing with Keen IO.
 
 #### Things Pushpop can do
 
 **Report Delivery**
 
-+ Send a metrics report to your inbox every day
++ Send a metrics report to your inbox every day at noon
 + Send an email when your site has been particularly busy in the last hour
 + Send regular analytics reports to your customers
 
@@ -54,13 +54,13 @@ end
 
 Pushpop is designed to be short and sweet, but because anything Ruby can be used it's also very powerful.
 
-## What next?
+### Where next?
 
-With me so far? Excited to try Pushpop with your data? Here's a few things to do next:
+Excited to try Pushpop with your data? Here's a few options to choose from:
 
-#### Quickstart - Run Pushpop locally
+#### Quickstart
 
-Got 10 minutes? It doesn't take long to get that first shiny report in your inbox, and even less if you already have a Keen IO, Sendgrid or Twilio account.
+Got 10 minutes? Setup Pushpop locally. It doesn't take long to get that first shiny report in your inbox, and even less if you already have a Keen IO, Sendgrid or Twilio account.
 
 **[Go to the Quickstart](#quickstart)**
 
@@ -70,21 +70,21 @@ If you've already written and run a Pushpop job locally you're now ready to depl
 
 **[Go to the Deploy Guide](#deploy-guide)**
 
-#### Not into the coding thing?
+#### Want! Help?
 
-Programming not your cup of tea? That's ok. Tea comes in a lot of different flavors. The friendly folks at Keen IO are happy to help you out.
+Not sure how to dig in? The friendly folks at Keen IO are happy to help you get an Pushpop instance running.
 
 **Email [team@keen.io](mailto:team@keen.io?subject=I want a Pushpop!)** with the subject "I want a Pushpop!"
 
 ## Quickstart
 
-The goal of the quickstart is to get a Pushpop instance locally. This should take less than 10 minutes.
+The goal of the Quickstart is to get a Pushpop instance running locally. This should take less than 10 minutes.
 
 #### Prerequisites
 
 + A working Ruby 1.9 installation
 + A [Keen IO](https://keen.io) account and project and associated API keys
-+ A [Sendgrid](https://sendgrid.com) or [Twilio](https://twilio.com) account and associated API keys
++ A [Sendgrid](https://sendgrid.com) and/or [Twilio](https://twilio.com) account and associated API keys
 
 #### Steps
 
@@ -119,10 +119,9 @@ Hey Pushpop, let's do a math!
 
 **Specify your API credentials**
 
-Now it's time to write a job that connects to APIs and does something real. For that we'll need to specify API keys. To tell Pushpop aboutAPI keys, we'll use [foreman](https://github.com/ddollar/foreman). When you use foreman to run a process, it adds variables found in a local `.env` file to the environemnt. It's very handy for keeping secure API keys out of your code! (.env files are gitignored by Pushpop)
+Now it's time to write a job that connects to APIs and does something real. For that we'll need to specify API keys. To tell Pushpop aboutAPI keys, we'll use [foreman](https://github.com/ddollar/foreman). When you use foreman to run a process, it adds variables found in a local `.env` file to the environment. It's very handy for keeping secure API keys out of your code (`.env` files are gitignored by Pushpop).
 
-Create a `.env` file in the project directory and add Keen IO API keys and Twilio and/or Sendgrid keys. Here's
-what an example file looks like with all three:
+Create a `.env` file in the project directory and add the API configuration and keys that you have. Here's what an example file looks like with settings from all three services:
 
 ```
 KEEN_PROJECT_ID=*********
@@ -137,7 +136,7 @@ TWILIO_SID=*********
 
 **Write your first job**
 
-Let's write a job that performs a count of one of your Keen IO collections, then sends you an email or text with the result. We'll set it to run every 24 hours.
+Let's write a job that performs a count of one of your Keen IO collections, then sends an email or text with the result. We'll set it to run every 24 hours.
 
 Create a file in the `jobs` folder called `first_job.rb` and paste in the following example:
 
@@ -159,7 +158,7 @@ job do
     to '<my-to-email-address>'
     from '<my-from-email-address>'
     subject "There were #{step_responses['keen']} events in the last 24 hours!"
-    body 'Not too shabby!'
+    body 'Blowing up!'
   end
   
   # use this block to send an sms
@@ -188,7 +187,7 @@ If you're ready to deploy a Pushpop to send ongoing reports, continue on to the 
 
 ## Deploy Guide
 
-These instructions are for Heroku, but should be adaptable to most environments. This should only about 10 minutes.
+These instructions are for Heroku, but should be adaptable to most environments.
 
 **Prerequisites**
 
@@ -352,9 +351,9 @@ In this example, the `twilio` step will only be ran if the `keen` step returned 
 
 Steps have the following attributes:
 
-+ `name`: (optional) something that describes the step. Useful in logs, and is the key in the `step_responses` hash. Defaults to plugin name, then an auto-generated value.
++ `name`: (optional) something that describes the step. Useful in logs, and is the key in the `step_responses` hash. Defaults to plugin name if a plugin is used
 + `plugin`: (optional) if the step is backed by a plugin, it's the name of the plugin
-+ `block`: A block that runs to configure the step (when a plugin is used), or run it.
++ `block`: A block that runs to configure the step (when a plugin is used) or run it
 
 Steps can be pure Ruby code, or in the case of a plugin calling into a DSL.
 
@@ -374,8 +373,8 @@ end
 
 `template` is a function that renders a template in context of the step responses and returns a string.
 The first argument is a template file name, located in the `templates` directory by default.
-The second and third arguments are the response and step_responses respectively.
-An optional fourth parameter can be used to change the path templates are looked for in.
+The second and third arguments are the `response` and `step_responses` respectively.
+An optional fourth parameter can be used to change the path templates are looked up in.
 
 Here's a very simple template:
 
@@ -383,6 +382,15 @@ Here's a very simple template:
 <h1>Daily Report</h1>
 <p>We got <%= response %> new users today!</p>
 ```
+
+## Rake Tasks
+
+All `jobs:*` rake tasks optionally take a single filename as a parameter. The file is meant to contain one or more Pushpop jobs. If no filename is specified, all jobs in the jobs folder are considered.
+
++ `jobs:describe` - Print out the names of jobs in the jobs folder
++ `jobs:run_once` - Run each job once, right now
++ `jobs:run` - Run jobs as scheduled in a long-running process
++ `spec` - Run the specs
 
 ## Recipes
 
@@ -430,7 +438,7 @@ See [examples/response_time_report_job.rb](examples/response_time_report_job.rb 
 
 ## Plugin Documentation
 
-All plugins are located at `lib/plugins`. They are loaded automatically.
+Plugins are located at `lib/plugins`. They are loaded automatically.
 
 ##### Keen
 
@@ -465,7 +473,7 @@ as well as `analyses` for doing a [multi-analysis](https://keen.io/docs/data-ana
 
 ##### Sendgrid
 
-The `sendgrid` plugin gives you a DSL to specify email recipient information, as well as the subject and body.
+The `sendgrid` plugin gives you a DSL to specify email parameters like subject and body.
 
 Here's an example:
 
@@ -475,7 +483,7 @@ job 'send an email' do
   sendgrid do
     to 'josh+pushpop@keen.io'
     from 'pushpopapp+123@keen.io'
-    subject 'Hey, ho, Let's go!'
+    subject 'Is your inbox lonely?'
     body 'This email was intentionally left blank.'
     preview false
   end
@@ -486,7 +494,7 @@ end
 The `sendgrid` plugin requires that the following environment variables are set: `SENDGRID_DOMAIN`, `SENDGRID_USERNAME`, and `SENDGRID_PASSWORD`.
 
 The `preview` directive is optional and defaults to false. If you set it to true, the email contents will print out
-to the console, but the email will not send.
+to the console, but the email will not be sent.
 
 The `body` method can take a string, or it can take the same parameters as `template`,
 in which case it will render a template to create the body. For example:
@@ -497,7 +505,7 @@ body 'pingpong_report.html.erb', response, step_responses
 
 ##### Twilio
 
-The `twilio` plugin gives you a DSL to specify SMS recipient information as well as the text itself.
+The `twilio` plugin provides DSL to specify SMS recipient information as well as the text itself.
 
 Here's an example:
 
