@@ -13,7 +13,7 @@
 
 Pushpop is a simple, powerful Ruby app that sends notifications in response to events you're capturing with Keen IO.
 
-#### Things Pushpop can do
+#### Things to do with Pushpop
 
 **Report Delivery**
 
@@ -433,7 +433,7 @@ end
 
 ##### Daily response time email report
 
-See [examples/response_time_report_job.rb](examples/response_time_report_job.rb and the
+See [examples/response_time_report_job.rb](examples/response_time_report_job.rb) and the
 [corresponding template](examples/templates/response_time_report.html.erb).
 
 ## Plugin Documentation
