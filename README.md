@@ -1,6 +1,5 @@
 # Pushpop
 [![Build Status](https://travis-ci.org/keenlabs/pushpop.svg)](https://travis-ci.org/keenlabs/pushpop)
-[![Dependency Status](https://gemnasium.com/keenlabs/pushpop.svg)](https://gemnasium.com/keenlabs/pushpop)
 
 ### Automated delivery of analytics reports and notifications
 
@@ -12,25 +11,25 @@
 
 ## Overview
 
-Pushpop is a simple, deploy-in-minutes Ruby app that sends emails and notifications about events you're capturing with Keen IO.
+Pushpop is a simple, deploy-in-minutes Ruby app that sends emails and notifications in response to events you're capturing with Keen IO.
 
 #### Things Pushpop can do
 
-**Deliver Reports**
+**Report Delivery**
 
 + Send a metrics report to your inbox every day
 + Send an email when your site has been particularly busy in the last hour
 + Send regular analytics reports to your customers
 
-**Send Alerts**
+**Alerting**
 
 + Text you if your site is slow or unavailable
 + Text you if the performance of your signup funnel has dramatically changed
 + Text your sales team if a big company signs up
 
-#### My first Pushpop Job
+#### An example Pushpop job
 
-Here's a Pushpop job that uses [Twilio](https://twilio.com/) to text the number of pageviews to a phone number every night at midnight:
+Here's a Pushpop job that uses [Twilio](https://twilio.com/) to text the number of daily pageviews to a phone number every night at midnight:
 
 ``` ruby
 require 'pushpop'
@@ -53,16 +52,15 @@ job do
 end
 ```
 
-You can use pure Ruby to create Pushpop jobs, but Pushpop also comes with a DSL ([Domain Specific Language](http://en.wikipedia.org/wiki/Domain-specific_language))
-that makes creating jobs even easier. The methods `job`, `every`, `keen`, and `twilio` in the above example all make us of the DSL.
+Pushpop is designed to be short and sweet, but because anything Ruby can be used it's also very powerful.
 
 ## What next?
 
-Got the idea? Excited? Here's a few choices of what to do next:
+With me so far? Excited to try Pushpop with your data? Here's a few things to do next:
 
-#### Get it running locally
+#### Quickstart - Run Pushpop locally
 
-Have 10 minutes? It doesn't take long to get a first report in your inbox, and it's even faster if you already have a Keen IO, Sendgrid or Twilio account.
+Got 10 minutes? It doesn't take long to get that first shiny report in your inbox, and even less if you already have a Keen IO, Sendgrid or Twilio account.
 
 **[Go to the Quickstart](#Quickstart)**
 
@@ -74,7 +72,7 @@ If you've already written and run a Pushpop job locally you're now ready to depl
 
 #### Not into the coding thing?
 
-Programming not your cup of tea? That's ok. Tea comes in a lot of different flavors. The friendly folks at Keen IO will help you out.
+Programming not your cup of tea? That's ok. Tea comes in a lot of different flavors. The friendly folks at Keen IO are happy to help you out.
 
 **Email [team@keen.io](mailto:team@keen.io?subject=I want a Pushpop!)** with the subject "I want a Pushpop!"
 
@@ -86,17 +84,17 @@ The goal of the quickstart is to get a Pushpop instance locally. This should tak
 
 + A working Ruby 1.9 installation
 + A [Keen IO](https://keen.io) account and project and associated API keys
-+ A [Sendgrid](https://sendgrid.com) or [Twilio](https://twilio.com) account and the associated API keys
++ A [Sendgrid](https://sendgrid.com) or [Twilio](https://twilio.com) account and associated API keys
 
 #### Steps
 
-1. Clone this repository.
+**Clone this repository.**
 
 ``` shell
 $ git clone git@github.com:keenlabs/pushpop.git
 ```
 
-2. Enter the pushpop directory and install dependencies.
+Enter the pushpop directory and install dependencies.
 
 ``` shell
 $ cd pushpop
@@ -104,7 +102,7 @@ $ gem install bundler
 $ bundle install
 ```
 
-3. Make sure everything is in order by running a test job.
+**Make sure everything is in order by running a test job.**
 
 There is an example job in `jobs/example.rb`. All it does is print some output to the console. Run this job via a rake task to make sure your configuration is properly setup.
 
@@ -119,11 +117,10 @@ Hey Pushpop, let's do a math!
 <pre>The number 30!</pre>
 ```
 
-4. Specify your API credentials
+**Specify your API credentials**
 
 Now it's time to write a job that does something real. For that we'll need to specify API keys. To tell Pushpop about 
-API keys, we'll use [foreman](https://github.com/ddollar/foreman). When you use foreman to run a ruby process, it adds
-environment variables found in a `.env` file to the environemnt. It's very handy for keeping secure API keys out of your code! (.env files are gitignored by Pushpop)
+API keys, we'll use [foreman](https://github.com/ddollar/foreman). When you use foreman to run a process, it adds variables found in a `.env` file to the environemnt. It's very handy for keeping secure API keys out of your code! (.env files are gitignored by Pushpop)
 
 Create a `.env` file in the project directory and add Keen IO API keys and either Twilio or Sendgrid keys. Here's
 what an example file would look like with all three:
@@ -139,12 +136,11 @@ TWILIO_FROM=*********
 TWILIO_SID=*********
 ```
 
-5. Write your first job
+**Write your first job**
 
 Let's write a job that performs a count of one of your Keen IO collections, then sends you an email or text with the result. We'll set it to run every 24 hours.
 
 Create a file in the `jobs` folder called `first_job.rb` and paste in the following example.
-
 
 ``` ruby
 job do
@@ -184,7 +180,7 @@ $ foreman run rake jobs:run_once[jobs/first_job.rb]
 
 The output of each step should print, and if everything worked you'll receive an email or a text message within a few seconds!
 
-6. Next steps
+**Next steps**
 
 From here you can write and run more jobs, or continue to the Deploy Guide to see how to deploy your code and send reports on an ongoing basis.
 
