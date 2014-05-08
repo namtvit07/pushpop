@@ -62,13 +62,13 @@ With me so far? Excited to try Pushpop with your data? Here's a few things to do
 
 Got 10 minutes? It doesn't take long to get that first shiny report in your inbox, and even less if you already have a Keen IO, Sendgrid or Twilio account.
 
-**[Go to the Quickstart](#Quickstart)**
+**[Go to the Quickstart](#quickstart)**
 
 #### Deploy a Pushpop Instance
 
 If you've already written and run a Pushpop job locally you're now ready to deploy it. Instructions are for Heroku are provided, but are generalizeable to other platforms.
 
-**[Go to the Deploy Guide](#DeployGuide)**
+**[Go to the Deploy Guide](#deploy-guide)**
 
 #### Not into the coding thing?
 
@@ -88,7 +88,7 @@ The goal of the quickstart is to get a Pushpop instance locally. This should tak
 
 #### Steps
 
-**Clone this repository.**
+**Clone this repository**
 
 ``` shell
 $ git clone git@github.com:keenlabs/pushpop.git
@@ -102,15 +102,15 @@ $ gem install bundler
 $ bundle install
 ```
 
-**Make sure everything is in order by running a test job.**
+**Test an example job**
 
-There is an example job in `jobs/example.rb`. All it does is print some output to the console. Run this job via a rake task to make sure your configuration is properly setup.
+There is an example job in [jobs/example_job.rb](jobs/example_job.rb). All it does is print some output to the console. Run this job via a rake task to make sure your configuration is setup properly.
 
 ``` shell
-$ foreman run rake jobs:run_once[jobs/example.rb]
+$ foreman run rake jobs:run_once[jobs/example_job.rb]
 ```
 
-You should see the following output followed by a logging statement:
+You should see the following output (followed by a logging statement):
 
 ``` html
 Hey Pushpop, let's do a math!
@@ -119,11 +119,10 @@ Hey Pushpop, let's do a math!
 
 **Specify your API credentials**
 
-Now it's time to write a job that does something real. For that we'll need to specify API keys. To tell Pushpop about 
-API keys, we'll use [foreman](https://github.com/ddollar/foreman). When you use foreman to run a process, it adds variables found in a `.env` file to the environemnt. It's very handy for keeping secure API keys out of your code! (.env files are gitignored by Pushpop)
+Now it's time to write a job that connects to APIs and does something real. For that we'll need to specify API keys. To tell Pushpop aboutAPI keys, we'll use [foreman](https://github.com/ddollar/foreman). When you use foreman to run a process, it adds variables found in a local `.env` file to the environemnt. It's very handy for keeping secure API keys out of your code! (.env files are gitignored by Pushpop)
 
-Create a `.env` file in the project directory and add Keen IO API keys and either Twilio or Sendgrid keys. Here's
-what an example file would look like with all three:
+Create a `.env` file in the project directory and add Keen IO API keys and Twilio and/or Sendgrid keys. Here's
+what an example file looks like with all three:
 
 ```
 KEEN_PROJECT_ID=*********
@@ -140,7 +139,7 @@ TWILIO_SID=*********
 
 Let's write a job that performs a count of one of your Keen IO collections, then sends you an email or text with the result. We'll set it to run every 24 hours.
 
-Create a file in the `jobs` folder called `first_job.rb` and paste in the following example.
+Create a file in the `jobs` folder called `first_job.rb` and paste in the following example:
 
 ``` ruby
 job do
@@ -148,31 +147,32 @@ job do
   # how frequently do we want this job to run?
   every 24.hours
 
-  # here we setup the keen query
+  # what keen io query should be performed?
   keen do
     event_collection '<my-keen-collection-name>'
     analysis_type 'count'
     timeframe 'last_24_hours'
   end
 
-  sendgrid do |response, step_responses|
+  # use this block to send an email
+  sendgrid do |_, step_responses|
     to '<my-to-email-address>'
     from '<my-from-email-address>'
     subject "There were #{step_responses['keen']} events in the last 24 hours!"
     body 'Not too shabby!'
   end
   
-  twilio do |step_responses|
+  # use this block to send an sms
+  twilio do |_, step_responses|
     to '<to-phone-number>'
     body "There were #{step_responses['keen']} events in the last 24 hours!"
   end
 end
 ```
 
-Now modify the example to suit your needs. You'll want to specify a `to` & `from` address if you're using Sendgrid and a
-`to` phone number if using Twilio. Everything you need to change is marked with `<>`. You'll also want to remove either Sendgrid or Twilio blocks you're not using them.
+Now modify the example to use your specific information. You'll want to specify a `to` and a `from` address if you're using Sendgrid, and a `to` phone number if you're using Twilio. Everything you need to change is marked with `<>`. You'll also want to remove either Sendgrid or Twilio blocks you're not using them.
 
-Save the file, and let's test this job using the same rake task we used before.
+Save the file and test this job using the same `jobs:run_once` rake task that we used before.
 
 ``` shell
 $ foreman run rake jobs:run_once[jobs/first_job.rb]
@@ -182,16 +182,19 @@ The output of each step should print, and if everything worked you'll receive an
 
 **Next steps**
 
-From here you can write and run more jobs, or continue to the Deploy Guide to see how to deploy your code and send reports on an ongoing basis.
+From here you can write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do.
+
+If you're ready to deploy a Pushpop to send ongoing reports, continue on to the deploy guide.
 
 ## Deploy Guide
 
 These instructions are for Heroku, but should be adaptable to most environments. This should only about 10 minutes.
 
-1. Prerequisites
+**Prerequisites**
+
 You'll need a Heroku account, and the Heroku toolbelt installed.
 
-2. Create a new Heroku app
+**Create a new Heroku app**
 
 Make sure you're inside the Pushpop directory.
 
@@ -199,33 +202,32 @@ Make sure you're inside the Pushpop directory.
 $ heroku create
 ```
 
-3. Commit any outstanding changes you have.
+**Commit changes**
 
-If you create a new job from the Quickstart guide, you'll need to commit that code before we deploy.
+If you created a new job from the Quickstart guide, you'll want to commit that code before deploying.
 
 ``` shell
 $ git commit -am 'Adding my first job'
 ```
 
-4. Push environment variables up to the Heroku app
+**Push up Heroku config variables**
 
-The easiest way to do this is with the heroku-config plugin. This assumes you have created a .env file containing
-your keys as demonstrated in the Quickstart guide.
+The easiest way to do this is with the [heroku-config](https://github.com/ddollar/heroku-config) plugin. This step assumes you have created a `.env` file containing your keys as demonstrated in the Quickstart guide.
 
 ``` shell
 $ heroku plugins:install git://github.com/ddollar/heroku-config.git
 $ heroku config:push
 ```
 
-5. Push code to Heroku
+**Deploy code to Heroku**
 
-Now that your code is commited and environment variables pushed we can kick off a deploy.
+Now that your code is commited and config variables pushed we can begin a deploy.
 
 ``` shell
 $ git push heroku master
 ```
 
-6. Make sure everything worked
+**Tail logs to confirm it's working**
 
 To see that jobs are running and that there are no errors, tail the logs on Heroku.
 
