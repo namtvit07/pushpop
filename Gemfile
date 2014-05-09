@@ -4,6 +4,7 @@ gem 'clockwork'
 gem 'keen'
 gem 'twilio-ruby'
 gem 'mail'
+gem 'foreman'
 
 group :development, :test do
   gem 'rake'
