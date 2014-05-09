@@ -11,25 +11,25 @@
 
 ## Overview
 
-Pushpop is a simple and powerful Ruby app that sends notifications based on event data you've captured with Keen IO.
+Pushpop is a simple but powerful Ruby app that sends notifications based on events captured with Keen IO.
 
-#### Things to do with Pushpop
+#### Ways to use Pushpop
 
 **Report Delivery**
 
 + Send a metrics report to your inbox every day at noon
-+ Send an email when your site has been particularly busy in the last hour
-+ Send regular analytics reports to your customers
++ Send an email when your site has been busier than usual in the last hour
++ Provide regular analytics reports to your customers
 
 **Alerting**
 
-+ Text you if your site is slow or unavailable
-+ Text you if the performance of your signup funnel has dramatically changed
-+ Text your sales team if a big company signs up
++ Send an SMS immediately if your site is slow or unavailable
++ Send an SMS if the performance of your signup funnel has dramatically changed
++ Send an SMS to your sales team if a big company signs up
 
 #### An example Pushpop job
 
-Here's a Pushpop job that uses [Twilio](https://twilio.com/) to text the number of daily pageviews to a phone number every night at midnight:
+Here's a simple Pushpop job that uses [Twilio](https://twilio.com/) to text the number of daily pageviews to a phone number every night at midnight:
 
 ``` ruby
 require 'pushpop'
@@ -52,27 +52,27 @@ job do
 end
 ```
 
-Pushpop syntax is designed to be short and sweet, but because anything Ruby can be used it's also very powerful.
+Pushpop syntax is short and sweet, but because anything Ruby can be used it's also quite powerful.
 
-### Where next?
+### Where to next?
 
 Excited to try out Pushpop with your data? Here's a few options to choose from:
 
 #### Quickstart
 
-Got 10 minutes? Setup Pushpop locally. It doesn't take long to get that first shiny report in your inbox, and even less if you already have a Keen IO, Sendgrid or Twilio account.
+Setup Pushpop locally. It takes 10 minutes to get that first shiny report in your inbox, and even less if you already have a Keen IO, Sendgrid or Twilio account.
 
 **[Go to the Quickstart](#quickstart)**
 
 #### Deploy a Pushpop Instance
 
-If you've already written and run a Pushpop job locally you're now ready to deploy it. Instructions are for Heroku are provided, but are generalizeable to other platforms.
+Ready to deploy the Pushpop job you wrote locally and start getting regular reports? Detailed instructions for Heroku are provided, as well as the basics for other platforms.
 
 **[Go to the Deploy Guide](#deploy-guide)**
 
 #### Need help?
 
-Don't have a hacker at hand? The friendly folks at Keen IO are happy to help you get an Pushpop instance running.
+Don't have a hacker at hand? The friendly folks at Keen IO are happy to help you get a Pushpop instance running.
 
 **Email [team@keen.io](mailto:team@keen.io?subject=I want a Pushpop!)** with the subject "I want a Pushpop!"
 
@@ -82,7 +82,7 @@ The goal of the Quickstart is to get a Pushpop instance running locally. This sh
 
 #### Prerequisites
 
-+ A working Ruby 1.9+ installation
++ A working Ruby installation (1.9+)
 + A [Keen IO](https://keen.io) account and project and associated API keys
 + A [Sendgrid](https://sendgrid.com) and/or [Twilio](https://twilio.com) account and associated API keys
 
@@ -119,9 +119,9 @@ Hey Pushpop, let's do a math!
 
 **Specify your API credentials**
 
-Now it's time to write a job that connects to APIs and does something real. For that we'll need to specify API keys. We'll use [foreman](https://github.com/ddollar/foreman) to tell Pushpop about API keys. When you use foreman to run a process, it adds variables found in a local `.env` file to the environment. It's very handy for keeping secure API keys out of your code (`.env` files are gitignored by Pushpop).
+Now it's time to write a job that connects to APIs and does something real. For that we'll need to specify API keys. We'll use [foreman](https://github.com/ddollar/foreman) to tell Pushpop about these API keys. When you use foreman to run a process, it adds variables from a local `.env` file to the process environment. It's very handy for keeping secure API keys out of your code (`.env` files are gitignored by Pushpop).
 
-Create a `.env` file in the project directory and add the API configuration and keys that you have. Here's what an example file looks like with settings from all three services:
+Create a `.env` file in the project directory and add the API configuration properties and keys that you have. Here's what an example file looks like with settings from all three services:
 
 ```
 KEEN_PROJECT_ID=*********
@@ -136,7 +136,7 @@ TWILIO_SID=*********
 
 **Write your first job**
 
-Let's write a job that performs a count of one of your Keen IO collections, then sends an email or text with the result. We'll set it to run every 24 hours.
+Let's write a job that performs a count of one of your Keen IO collections and sends an email (or SMS) with the result. We'll set it to run every 24 hours.
 
 Create a file in the `jobs` folder called `first_job.rb` and paste in the following example:
 
@@ -177,21 +177,22 @@ Save the file and test this job using the same `jobs:run_once` rake task that we
 $ foreman run rake jobs:run_once[jobs/first_job.rb]
 ```
 
-The output of each step should print, and if everything worked you'll receive an email or a text message within a few seconds!
+The output of each step will be logged to the console, and if everything worked you'll receive an email or a text message within a few seconds!
 
 **Next steps**
 
-From here you can write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do.
-
-If you're ready to deploy a Pushpop to send ongoing reports, continue on to the deploy guide.
++ Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do.
++ Continue on to the deploy guide to deploy a Pushpop instance and start getting regular reports.
 
 ## Deploy Guide
 
-These instructions are for Heroku, but should be adaptable to most environments.
+##### Heroku
+
+These instructions are for Heroku, but should be relevant to most environments.
 
 **Prerequisites**
 
-You'll need a Heroku account, and the Heroku toolbelt installed.
+You'll need a Heroku account, and the [Heroku toolbelt](https://toolbelt.heroku.com/) installed.
 
 **Create a new Heroku app**
 
@@ -206,10 +207,10 @@ $ heroku create
 If you created a new job from the Quickstart guide, you'll want to commit that code before deploying.
 
 ``` shell
-$ git commit -am 'Adding my first job'
+$ git commit -am 'Created my first Pushpop job'
 ```
 
-**Push up Heroku config variables**
+**Set Heroku config variables**
 
 The easiest way to do this is with the [heroku-config](https://github.com/ddollar/heroku-config) plugin. This step assumes you have created a `.env` file containing your keys as demonstrated in the Quickstart guide.
 
@@ -239,9 +240,31 @@ Note that if you have jobs that are set to run at specific times of day you migh
 Also note - by default this will run all jobs in the `jobs` folder. You might want to delete the `example_job.rb` file in
 a separate commit once you've got the hang of things.
 
+##### Other environments
+
+Pushpop is run entirely by one long-running Ruby process. Anywhere you can run this process in a monitored fashion you can run a Pushpop instance. Here's the command:
+
+``` shell
+$ foreman run rake jobs:run
+```
+
+If you don't want to use foreman and prefer to set the environment variables yourself then all you need is this:
+
+``` shell
+$ bundle exec rake jobs:run
+```
+
 ## Rake Tasks
 
 All `jobs:*` rake tasks optionally take a single filename as a parameter. The file is meant to contain one or more Pushpop jobs. If no filename is specified, all jobs in the jobs folder are considered.
+
+Specifying a specific file looks like this:
+
+``` shell
+$ foreman run rake jobs:run[jobs/just_this_job.rb]
+```
+
+Here's a list of the available rake tasks:
 
 + `jobs:describe` - Print out the names of jobs in the jobs folder.
 + `jobs:run_once` - Run each job once, right now.
@@ -250,8 +273,7 @@ All `jobs:*` rake tasks optionally take a single filename as a parameter. The fi
 
 ## Pushpop API Documentation
 
-Steps and jobs are the heart of the Pushpop workflow. Any file can contain one or more jobs,
-and each job consists of one or more steps.
+Steps and jobs are the heart of the Pushpop workflow. Ruby jobs files contain one or more jobs, and each job consists of one or more steps.
 
 #### Jobs
 
@@ -259,10 +281,10 @@ Jobs have the following attributes:
 
 + `name`: (optional) something that describe the job, useful in logs
 + `every_duration`: the frequency at which to run the job
-+ `every_options`: options related to when the job runs
++ `every_options` (optional): options related to when the job runs
 + `steps`: the ordered list of steps to run
 
-These attributes are easily specified with the DSL's block syntax. Here's an example:
+These attributes are easily specified using the DSL's block syntax. Here's an example:
 
 ``` ruby
 job 'print job' do
@@ -274,10 +296,10 @@ end
 ```
 
 Inside of a `job` configuration block, steps are added by using the `step` method. They can also be
-added by using a method registered by a plugin, like `keen` or `twilio`. For more information, see [Plugins](#plugins).
+added by using a method registered by a plugin, like `keen` or `twilio`. For more information, see [Plugin Documentation](#plugin-documentation).
 
 The frequency of the job is set via the `every` method. This is basically a passthrough to Clockwork.
-Here are some cool things you can do:
+Here are some cool things you can do with regard to scheduling:
 
 ``` ruby
 every 5.seconds
@@ -557,6 +579,7 @@ Issues and pull requests are welcome!
 + Add plugins for more data collection and notification services
 + Add a web interface that shows the job names, job results, and a countdown to the next run
 + Add a web interface that lets you preview emails in the browser
++ Beautiful email templates with support for typical Keen IO query responses (groups, series, etc)
 
 **Testing**
 
