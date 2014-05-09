@@ -11,7 +11,7 @@
 
 ## Overview
 
-Pushpop is a simple, powerful Ruby app that sends notifications in response to events you're capturing with Keen IO.
+Pushpop is a simple and powerful Ruby app that sends notifications based on event data you've captured with Keen IO.
 
 #### Things to do with Pushpop
 
@@ -52,11 +52,11 @@ job do
 end
 ```
 
-Pushpop is designed to be short and sweet, but because anything Ruby can be used it's also very powerful.
+Pushpop syntax is designed to be short and sweet, but because anything Ruby can be used it's also very powerful.
 
 ### Where next?
 
-Excited to try Pushpop with your data? Here's a few options to choose from:
+Excited to try out Pushpop with your data? Here's a few options to choose from:
 
 #### Quickstart
 
@@ -70,9 +70,9 @@ If you've already written and run a Pushpop job locally you're now ready to depl
 
 **[Go to the Deploy Guide](#deploy-guide)**
 
-#### Want! Help?
+#### Need help?
 
-Not sure how to dig in? The friendly folks at Keen IO are happy to help you get an Pushpop instance running.
+Don't have a hacker at hand? The friendly folks at Keen IO are happy to help you get an Pushpop instance running.
 
 **Email [team@keen.io](mailto:team@keen.io?subject=I want a Pushpop!)** with the subject "I want a Pushpop!"
 
@@ -82,7 +82,7 @@ The goal of the Quickstart is to get a Pushpop instance running locally. This sh
 
 #### Prerequisites
 
-+ A working Ruby 1.9 installation
++ A working Ruby 1.9+ installation
 + A [Keen IO](https://keen.io) account and project and associated API keys
 + A [Sendgrid](https://sendgrid.com) and/or [Twilio](https://twilio.com) account and associated API keys
 
@@ -119,7 +119,7 @@ Hey Pushpop, let's do a math!
 
 **Specify your API credentials**
 
-Now it's time to write a job that connects to APIs and does something real. For that we'll need to specify API keys. To tell Pushpop aboutAPI keys, we'll use [foreman](https://github.com/ddollar/foreman). When you use foreman to run a process, it adds variables found in a local `.env` file to the environment. It's very handy for keeping secure API keys out of your code (`.env` files are gitignored by Pushpop).
+Now it's time to write a job that connects to APIs and does something real. For that we'll need to specify API keys. We'll use [foreman](https://github.com/ddollar/foreman) to tell Pushpop about API keys. When you use foreman to run a process, it adds variables found in a local `.env` file to the environment. It's very handy for keeping secure API keys out of your code (`.env` files are gitignored by Pushpop).
 
 Create a `.env` file in the project directory and add the API configuration and keys that you have. Here's what an example file looks like with settings from all three services:
 
@@ -239,6 +239,15 @@ Note that if you have jobs that are set to run at specific times of day you migh
 Also note - by default this will run all jobs in the `jobs` folder. You might want to delete the `example_job.rb` file in
 a separate commit once you've got the hang of things.
 
+## Rake Tasks
+
+All `jobs:*` rake tasks optionally take a single filename as a parameter. The file is meant to contain one or more Pushpop jobs. If no filename is specified, all jobs in the jobs folder are considered.
+
++ `jobs:describe` - Print out the names of jobs in the jobs folder.
++ `jobs:run_once` - Run each job once, right now.
++ `jobs:run` - Run jobs as scheduled in a long-running process. This is the task used when you deploy.
++ `spec` - Run the specs.
+
 ## Pushpop API Documentation
 
 Steps and jobs are the heart of the Pushpop workflow. Any file can contain one or more jobs,
@@ -355,7 +364,7 @@ Steps have the following attributes:
 + `plugin`: (optional) if the step is backed by a plugin, it's the name of the plugin
 + `block`: A block that runs to configure the step (when a plugin is used) or run it
 
-Steps can be pure Ruby code, or in the case of a plugin calling into a DSL.
+Steps can be pure Ruby code or leverage a plugin DSL. Plugins are just fancy abstractions for creating steps.
 
 Steps have built-in support for ERB templating. This is useful for generating more complex emails and reports.
 
@@ -382,15 +391,6 @@ Here's a very simple template:
 <h1>Daily Report</h1>
 <p>We got <%= response %> new users today!</p>
 ```
-
-## Rake Tasks
-
-All `jobs:*` rake tasks optionally take a single filename as a parameter. The file is meant to contain one or more Pushpop jobs. If no filename is specified, all jobs in the jobs folder are considered.
-
-+ `jobs:describe` - Print out the names of jobs in the jobs folder
-+ `jobs:run_once` - Run each job once, right now
-+ `jobs:run` - Run jobs as scheduled in a long-running process
-+ `spec` - Run the specs
 
 ## Recipes
 
@@ -550,10 +550,15 @@ end
 
 ## Contributing
 
-Issues and pull requests are welcome! Some ideas are to:
+Issues and pull requests are welcome!
 
-+ Add more plugins!
+**Wishlist**
+
++ Add plugins for more data collection and notification services
++ Add a web interface that shows the job names, job results, and a countdown to the next run
 + Add a web interface that lets you preview emails in the browser
+
+**Testing**
 
 Pushpop has a full set of specs (including plugins). Run them like this:
 
