@@ -15,21 +15,19 @@ Pushpop is a simple but powerful Ruby app that sends notifications based on even
 
 #### Ways to use Pushpop
 
-**Report Delivery**
+**Regular reports**
 
-+ Send a metrics report to your inbox every day at noon
++ Send a sales report to your inbox every day at noon
++ Send analytics reports to your customers every week
+
+**Alerts**
+
++ Send an SMS if the performance of your signup funnel dramatically changes
 + Send an email when your site has been busier than usual in the last hour
-+ Provide regular analytics reports to your customers
-
-**Alerting**
-
-+ Send an SMS immediately if your site is slow or unavailable
-+ Send an SMS if the performance of your signup funnel has dramatically changed
-+ Send an SMS to your sales team if a big company signs up
 
 #### An example Pushpop job
 
-Here's a simple Pushpop job that uses [Twilio](https://twilio.com/) to text the number of daily pageviews to a phone number every night at midnight:
+Here's a simple Pushpop job that uses [Twilio](https://twilio.com/) to send an SMS containing the number of daily pageviews each night at midnight:
 
 ``` ruby
 require 'pushpop'
@@ -182,7 +180,7 @@ The output of each step will be logged to the console, and if everything worked 
 **Next steps**
 
 + Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do.
-+ Continue on to the deploy guide to deploy a Pushpop instance and start getting regular reports.
++ Continue on to the deploy guide to deploy a Pushpop instance and start getting regular reports and alerts.
 
 ## Deploy Guide
 
