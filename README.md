@@ -1,7 +1,7 @@
 # Pushpop
 [![Build Status](https://travis-ci.org/keenlabs/pushpop.svg)](https://travis-ci.org/keenlabs/pushpop)
 
-### Automated delivery of analytics reports and alerts
+### Automatic delivery of regular reports and alerts 
 
 <hr>
 <img src="http://f.cl.ly/items/1I421w263a10340a0u2q/Screen%20Shot%202014-04-16%20at%204.35.47%20PM.png" width="45%" alt="Pingpong Daily Response Time Report">
