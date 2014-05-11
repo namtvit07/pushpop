@@ -414,47 +414,8 @@ Here's a very simple template:
 
 ## Recipes
 
-Here are some ways to use Pushpop to do common tasks.
-
-##### Error alerting with Pingpong
-
-[Pingpong](https://github.com/keenlabs/pingpong.git) captures HTTP request/response data for remote URLs.
-By pairing Pingpong with Pushpop, you can get custom alerts and reports about the web performance and
-availability you're attempting to observe.
-
-Here's a job that sends an SMS if any check had errors in the last minute.
-
-``` ruby
-job do
-
-  every 1.minute
-
-  keen do
-    event_collection 'checks'
-    analysis_type 'count'
-    timeframe 'last_1_minute'
-    filters [{
-      property_name: "response.successful",
-      operator: "eq",
-      property_value: false
-    }]
-  end
-
-  step 'notify only if there are errors' do |response|
-    response > 0
-  end
-
-  twilio do |step_responses|
-    to '+18005555555'
-    body "There were #{step_responses['keen']} errors in the last minute!"
-  end
-end
-```
-
-##### Daily response time email report
-
-See [examples/response_time_report_job.rb](examples/response_time_report_job.rb) and the
-[corresponding template](examples/templates/response_time_report.html.erb).
+The community-driven [pushpop-recipes](https://github.com/keenlabs/pushpop-recipes) repository contains jobs and templates
+for doing common things with Pushpop. Check it out for some inspiration!
 
 ## Plugin Documentation
 
