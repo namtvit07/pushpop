@@ -529,6 +529,39 @@ job do
 end
 ```
 
+## Usage as a Ruby gem
+
+Pushpop is also a Ruby gem, so you can add it to an existing Ruby project. Here's how to do that:
+
+**Install the gem**
+
+``` ruby
+# bundler
+gem 'pushpop'
+
+# not bundler
+gem install 'pushpop'
+```
+
+**Require job files and run**
+
+Once the gem is available, you should be able to load in Pushpop job files. Once a file loads,
+all of its jobs are ready to be run or scheduled.
+
+``` ruby
+load 'some_job.rb'
+
+# run the jobs once
+Pushpop.run
+
+# or schedule and run the jobs with clockwork
+Pushpop.schedule
+Clockwork.manager.run
+```
+
+Note that `pushpop` does not declare dependencies other than `clockwork` and `keen`. If you're using
+Pushpop plugins like Sendgrid or Twilio you'll need to install and require those dependencies explicitly.
+
 ## Contributing
 
 Issues and pull requests are welcome!
