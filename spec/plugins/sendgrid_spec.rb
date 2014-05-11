@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-SPEC_TEMPLATES_DIRECTORY = File.expand_path('../../templates', __FILE__)
+SPEC_TEMPLATES_DIRECTORY ||= File.expand_path('../../templates', __FILE__)
 
 describe Pushpop::Sendgrid do
 
