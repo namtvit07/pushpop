@@ -189,7 +189,7 @@ The output of each step will be logged to the console. If everything worked you'
 
 ## Deploy Guide
 
-##### Heroku
+#### Heroku
 
 These instructions are for Heroku, but should be relevant to most environments.
 
@@ -244,7 +244,7 @@ Note that if you have jobs that are set to run at specific times of day you migh
 
 Another note - by default this will run all jobs in the `jobs` folder. You might want to delete the `example_job.rb` file in a separate commit once you've got the hang of things.
 
-##### Other environments
+#### Other environments
 
 Pushpop is deployed as one long-running Ruby process. Anywhere you can run this process you can run Pushpop. Here's the command:
 
