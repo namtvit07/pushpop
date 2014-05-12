@@ -285,8 +285,8 @@ Steps and jobs are the heart of the Pushpop workflow. Job files are written in p
 Jobs have the following attributes:
 
 + `name`: (optional) something that describe the job, useful in logs
-+ `every_duration`: the frequency at which to run the job
-+ `every_options` (optional): options related to when the job runs
++ `period`: how frequently to run the job, first param to `every`
++ `every_options` (optional): options related to when the job runs, second param to `every`
 + `steps`: an ordered list of steps to run
 
 These attributes are easily specified using the DSL's block syntax. Here's an example:
@@ -305,7 +305,7 @@ The name of this job is 'print job'. It runs every 5 minutes and it has 1 step.
 Inside of a `job` configuration block, steps are added by using the `step` method. They can also be
 added by using a method registered by a plugin, like `keen` or `twilio`. For more information on plugins see [Plugin Documentation](#plugin-documentation).
 
-The frequency of the job's execution is set via the `every` method. This is basically a passthrough to the [Clockwork](https://github.com/tomykaira/clockwork) long-running process scheduler. Here are some cool things you can do with regard to setting times and days:
+The period of the job's execution is set via the `every` method. This is basically a passthrough to the [Clockwork](https://github.com/tomykaira/clockwork) long-running process scheduler. Here are some cool things you can do with regard to setting times and days:
 
 ``` ruby
 every 5.seconds

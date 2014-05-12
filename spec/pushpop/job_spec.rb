@@ -17,7 +17,7 @@ describe Pushpop::Job do
       block_ran = false
       job = Pushpop::Job.new('foo') do block_ran = true end
       job.name.should == 'foo'
-      job.every_duration.should be_nil
+      job.period.should be_nil
       job.every_options.should == {}
       block_ran.should be_true
     end
@@ -29,10 +29,10 @@ describe Pushpop::Job do
   end
 
   describe '#every' do
-    it 'should set duration and options' do
+    it 'should set period and options' do
       job = empty_job
       job.every(10.seconds, at: '01:02')
-      job.every_duration.should == 10
+      job.period.should == 10
       job.every_options.should == { at: '01:02' }
     end
   end
@@ -91,9 +91,9 @@ describe Pushpop::Job do
 
   describe '#schedule' do
     it 'should add the job to clockwork' do
-      frequency = 1.seconds
+      period = 1.seconds
       simple_job = Pushpop::Job.new('foo') do
-        every frequency
+        every period
         step 'track_times_run' do
           @times_run ||= 0
           @times_run += 1
@@ -104,11 +104,11 @@ describe Pushpop::Job do
 
       Clockwork.manager.tick(Time.now)
       simple_job.run.first.should == 2
-      Clockwork.manager.tick(Time.now + frequency)
+      Clockwork.manager.tick(Time.now + period)
       simple_job.run.first.should == 4
     end
 
-     it 'should fail if the frequency was not specified' do
+     it 'should fail if the period was not specified' do
        simple_job = Pushpop::Job.new('foo') do end
        expect {
          simple_job.schedule

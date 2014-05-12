@@ -15,7 +15,7 @@ module Pushpop
     end
 
     attr_accessor :name
-    attr_accessor :every_duration
+    attr_accessor :period
     attr_accessor :every_options
     attr_accessor :steps
 
@@ -26,8 +26,8 @@ module Pushpop
       self.instance_eval(&block)
     end
 
-    def every(duration, options={})
-      self.every_duration = duration
+    def every(period, options={})
+      self.period = period
       self.every_options = options
     end
 
@@ -48,8 +48,8 @@ module Pushpop
     end
 
     def schedule
-      raise 'Frequency not set, use "every"' unless self.every_duration
-      Clockwork.manager.every(every_duration, name, every_options) do
+      raise 'Set job period via "every"' unless self.period
+      Clockwork.manager.every(period, name, every_options) do
         run
       end
     end
