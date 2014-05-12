@@ -30,7 +30,7 @@ Pushpop is a simple but powerful Ruby app that sends notifications about events 
 
 #### An example Pushpop job
 
-Here's a simple Pushpop job that uses [Twilio](https://twilio.com/) to send an SMS containing the number of daily pageviews. This job runs every night at midnight.
+This Pushpop job sends a nightly email at midnight containing the day's number of pageviews:
 
 ``` ruby
 require 'pushpop'
@@ -40,18 +40,22 @@ job do
   every 24.hours, at: '00:00'
 
   keen do
-    event_collection 'pageviews'
-    analysis_type 'count'
-    timeframe 'last_24_hours'
+    event_collection  'pageviews'
+    analysis_type     'count'
+    timeframe         'last_24_hours'
   end
-
-  twilio do |response|
-    to '+18005555555'
-    body "There were #{response} pageviews today!"
+  
+  sendgrid do |response, _|
+    to        'josh+pushpop@keen.io'
+    from      'pushpop-app@keen.io'
+    subject   'Pushpop Daily Pageviews Report'
+    body      "There were #{response} pageviews today!"
   end
 
 end
 ```
+
+The email is sent by [Sendgrid](https://sendgrid.com), made possible by the `sendgrid` Pushpop plugin.
 
 Pushpop syntax is short and sweet, but because Pushpop is just Ruby it's also quite powerful.
 
@@ -151,23 +155,23 @@ job do
 
   # what keen io query should be performed?
   keen do
-    event_collection '<my-keen-collection-name>'
-    analysis_type 'count'
-    timeframe 'last_24_hours'
+    event_collection  '<my-keen-collection-name>'
+    analysis_type     'count'
+    timeframe         'last_24_hours'
   end
 
   # use this block to send an email
   sendgrid do |_, step_responses|
-    to '<my-to-email-address>'
-    from '<my-from-email-address>'
+    to      '<my-to-email-address>'
+    from    '<my-from-email-address>'
     subject "There were #{step_responses['keen']} events in the last 24 hours!"
-    body 'We are blowing up!'
+    body    'We are blowing up!'
   end
   
   # use this block to send an sms
   twilio do |_, step_responses|
-    to '<to-phone-number>'
-    body "There were #{step_responses['keen']} events in the last 24 hours!"
+    to    '<to-phone-number>'
+    body  "There were #{step_responses['keen']} events in the last 24 hours!"
   end
 end
 ```
@@ -403,9 +407,9 @@ Here's an example that uses a template:
 
 ``` ruby
 sendgrid do |response, step_responses|
-  to 'josh+pushpop@keen.io'
-  from 'pushpopapp+123@keen.io'
-  subject 'Pingpong Daily Response Time Report'
+  to            'josh+pushpop@keen.io'
+  from          'pushpopapp+123@keen.io'
+  subject       'Pingpong Daily Response Time Report'
   body template 'pingpong_report.html.erb', response, step_responses
 end
 ```
@@ -471,11 +475,11 @@ Here's an example:
 job 'send an email' do
 
   sendgrid do
-    to 'josh+pushpop@keen.io'
-    from 'pushpopapp+123@keen.io'
-    subject 'Is your inbox lonely?'
-    body 'This email was intentionally left blank.'
-    preview false
+    to        'josh+pushpop@keen.io'
+    from      'pushpopapp+123@keen.io'
+    subject   'Is your inbox lonely?'
+    body      'This email was intentionally left blank.'
+    preview   false
   end
 
 end
@@ -506,8 +510,8 @@ Here's an example:
 job 'send a text' do
 
   twilio do
-    to '+18005555555'
-    body 'Quick, move your car!'
+    to    '+18005555555'
+    body  'Quick, move your car!'
   end
 
 end
