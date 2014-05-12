@@ -1,4 +1,7 @@
-# Pushpop
+<p align="center">
+<img align="center" src="http://f.cl.ly/items/0z182V2i3X0Q0Y3I2A2G/pushpop-logo.png"> 
+</p>
+
 [![Build Status](https://travis-ci.org/keenlabs/pushpop.svg)](https://travis-ci.org/keenlabs/pushpop)
 
 ### Send alerts and recurring reports based on Keen IO events
