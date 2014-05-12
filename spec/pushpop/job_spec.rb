@@ -107,6 +107,13 @@ describe Pushpop::Job do
       Clockwork.manager.tick(Time.now + frequency)
       simple_job.run.first.should == 4
     end
+
+     it 'should fail if the frequency was not specified' do
+       simple_job = Pushpop::Job.new('foo') do end
+       expect {
+         simple_job.schedule
+       }.to raise_error
+     end
   end
 
   describe '#method_missing' do

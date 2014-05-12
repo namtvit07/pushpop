@@ -48,6 +48,7 @@ module Pushpop
     end
 
     def schedule
+      raise 'Frequency not set, use "every"' unless self.every_duration
       Clockwork.manager.every(every_duration, name, every_options) do
         run
       end
