@@ -54,7 +54,7 @@ Pushpop syntax is short and sweet, but because Pushpop is just Ruby it's also qu
 
 ### Get Started
 
-Excited to try out Pushpop with your data? Here's a few options to choose from:
+Excited to try out Pushpop with your Keen IO projects? Here's a few options to choose from:
 
 #### The Quickstart
 
@@ -64,19 +64,19 @@ Setup Pushpop locally. It takes 10 minutes to get that first shiny report in you
 
 #### Deploy a Pushpop Instance
 
-Ready to deploy a local Pushpop job? Detailed instructions for Heroku are provided, as well as the basics for other platforms.
+Ready to deploy a local Pushpop job? Detailed instructions for Heroku are provided as well as a basic guide for other platforms.
 
 **[Go to the Deploy Guide](#deploy-guide)**
 
 #### Need help?
 
-Don't have a hacker on hand? The friendly folks at Keen IO can set everything up for you.
+Don't have a hacker on hand? The friendly folks at Keen IO can set a Pushpop up for you.
 
-**Email [team@keen.io](mailto:team@keen.io?subject=I want a Pushpop!)** with the subject "I want a Pushpop!"
+**Email [team@keen.io](mailto:team@keen.io?subject=I want a Pushpop!)** with the subject "I want a Pushpop!". Include information about what queries you'd like to run (and when) and how you'd like the results communicated.
 
 ## Quickstart
 
-The goal of the Quickstart is to get a Pushpop instance running locally. This should take less than 10 minutes.
+The goal of the Quickstart is to get a Pushpop instance running locally and write your first job. This should take less than 10 minutes.
 
 #### Prerequisites
 
@@ -100,7 +100,7 @@ $ gem install bundler
 $ bundle install
 ```
 
-**Test an example job**
+**Test the included example job**
 
 There is an example job in [jobs/example_job.rb](jobs/example_job.rb). All it does is print some output to the console. Run this job via a rake task to make sure your configuration is setup properly.
 
@@ -139,6 +139,8 @@ Let's write a job that performs a count of one of your Keen IO collections and s
 Create a file in the `jobs` folder called `first_job.rb` and paste in the following example:
 
 ``` ruby
+require 'pushpop'
+
 job do
 
   # how frequently do we want this job to run?
@@ -156,7 +158,7 @@ job do
     to '<my-to-email-address>'
     from '<my-from-email-address>'
     subject "There were #{step_responses['keen']} events in the last 24 hours!"
-    body 'Blowing up!'
+    body 'We are blowing up!'
   end
   
   # use this block to send an sms
@@ -167,7 +169,7 @@ job do
 end
 ```
 
-Now modify the example to use your specific information. You'll want to specify a `to` and a `from` address if you're using Sendgrid, and a `to` phone number if you're using Twilio. Everything you need to change is marked with `<>`. You'll also want to remove either Sendgrid or Twilio block if you're not using it.
+Now modify the example to use your query and contact information. You'll want to specify a `to` and a `from` address if you're using Sendgrid, and a `to` phone number if you're using Twilio. Everything you need to change is marked with `<>`. You'll also want to remove either Sendgrid or Twilio block if you're not using it.
 
 Save the file and test this job the `jobs:run_once` rake task:
 
@@ -179,7 +181,7 @@ The output of each step will be logged to the console. If everything worked you'
 
 **Next steps**
 
-+ Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do. See [pushpop-recipes](https://github.com/keenlabs/pushpop-recipes) for reusable code and inspiration.
++ Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do. See [pushpop-recipes](https://github.com/keenlabs/pushpop-recipes) for reusable code and inspiration!
 + Continue on to the [Deploy Guide](#deploy-guide) to deploy the job you just created.
 
 ## Deploy Guide
@@ -241,7 +243,7 @@ Another note - by default this will run all jobs in the `jobs` folder. You might
 
 ##### Other environments
 
-Pushpop is run entirely by one long-running Ruby process. Anywhere you can run this process you can run a Pushpop instance. Here's the command:
+Pushpop is deployed as one long-running Ruby process. Anywhere you can run this process you can run Pushpop. Here's the command:
 
 ``` shell
 $ foreman run rake jobs:run
@@ -253,13 +255,13 @@ If you don't want to use foreman and prefer to set the environment variables you
 $ bundle exec rake jobs:run
 ```
 
-Note: You may want to monitor the process via something like [supervisord](http://supervisord.org/).
+Note: You probably want to monitor the process via something like [supervisord](http://supervisord.org/).
 
 ## Rake Tasks
 
 Pushpop comes with some rake tasks to make command line interaction and deployment easier.
 
-All `jobs:*` rake tasks optionally take a single filename as a parameter. The file is meant to contain one or more Pushpop jobs. If no filename is specified, all jobs in the jobs folder are considered.
+All `jobs:*` rake tasks optionally take a single filename as a parameter. The file is meant to contain one or more Pushpop jobs. If no filename is specified, all jobs in the jobs folder are required.
 
 Specifying a specific file looks like this:
 
