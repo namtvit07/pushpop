@@ -14,7 +14,7 @@
 
 ## Overview
 
-Pushpop is a simple but powerful Ruby app that sends notifications about events captured with Keen IO.
+Pushpop is a simple but powerful Ruby app that sends notifications about events captured with the [Keen IO](https://keen.io) Analytics API.
 
 #### Ways to use Pushpop
 
