@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Josh Dzielak"]
   s.email       = "josh@keen.io"
   s.homepage    = "https://github.com/keenlabs/pushpop"
-  s.summary     = "Automatic delivery of reports and alerts based on Keen IO events"
-  s.description = "Pushpop is a simple but powerful Ruby app that sends notifications based on events captured with Keen IO."
+  s.summary     = "Send alerts and recurring reports based on Keen IO events"
+  s.description = "Pushpop is a simple but powerful Ruby app that sends notifications about events captured with Keen IO."
 
   s.add_dependency "clockwork"
   s.add_dependency "keen"
