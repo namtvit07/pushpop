@@ -500,6 +500,25 @@ The `sendgrid` plugin requires that the following environment variables are set:
 + `SENDGRID_USERNAME`
 + `SENDGRID_PASSWORD`
 
+##### Non-DSL methods
+
+Need to send multiple emails in one step? Need more control over email sending? The DSL approach won't be sufficient for you.
+Instead, use the `send_email` method exposed by the plugin directly. Here's an example:
+
+``` ruby
+job 'send multiple emails' do
+
+  step 'send some emails' do
+
+    ['josh+1@keen.io', 'justin+1@keen.io'].each do |to_address|
+      send_email to_address, 'pushpop-app@keen.io', 'Nice subject', 'Nice body'
+    end
+
+  end
+
+end
+```
+
 ##### Twilio
 
 The `twilio` plugin provides a DSL to specify SMS recipient information as well as the message itself.
@@ -522,6 +541,24 @@ The `twilio` plugin requires that the following environment variables are set:
 + `TWILIO_AUTH_TOKEN`
 + `TWILIO_SID`
 + `TWILIO_FROM`
+
+##### Non-DSL Methods
+
+If you need a lower level interface to Twilio functionality, use the `send_message` method exposed by the plugin directly. Here's an example:
+
+``` ruby
+job 'send a few texts' do
+
+  twilio do
+    ['+18005555555','+18005555556'].each do |to_number|
+      to to_number
+      body 'Quick, move your car!'
+    end
+  end
+
+end
+```
+
 
 ## Creating plugins
 

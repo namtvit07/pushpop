@@ -22,16 +22,20 @@ module Pushpop
       _from = self._from || TWILIO_FROM
       _body = self._body
 
-      client = ::Twilio::REST::Client.new(TWILIO_SID, TWILIO_AUTH_TOKEN)
-
-      client.account.messages.create(
-          from: _from,
-          to: _to,
-          body: _body )
+      if _to && _from && _body
+        send_message(_to, _from, _body)
+      else
+        Pushpop.logger.warn('Message not sent. One of to, from, or body was missing.')
+        false
+      end
     end
 
-    def configure(last_response=nil, step_responses=nil)
-      self.instance_exec(last_response, step_responses, &block)
+    def send_message(to, from, body)
+      client = ::Twilio::REST::Client.new(TWILIO_SID, TWILIO_AUTH_TOKEN)
+      client.account.messages.create(
+          from: from,
+          to: to,
+          body: body )
     end
 
     def from(from)
@@ -44,6 +48,10 @@ module Pushpop
 
     def body(body)
       self._body = body
+    end
+
+    def configure(last_response=nil, step_responses=nil)
+      self.instance_exec(last_response, step_responses, &block)
     end
 
   end

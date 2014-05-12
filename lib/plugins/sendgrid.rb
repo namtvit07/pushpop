@@ -34,6 +34,14 @@ module Pushpop
       _subject = self._subject
       _body = self._body
 
+      if _to && _from && _subject && _body
+        send_email(_to, _from, _subject, _body)
+      else
+        Pushpop.logger.warn('Email not sent. One of to, from, subject, or body was missing.')
+      end
+    end
+
+    def send_email(_to, _from, _subject, _body)
       Mail.deliver do
         to _to
         from _from

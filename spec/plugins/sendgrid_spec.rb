@@ -45,6 +45,12 @@ describe Pushpop::Sendgrid do
 
     end
 
+    it 'should not sent email if nothing is configured' do
+      Mail.stub(:deliver).never
+      step = Pushpop::Sendgrid.new do end
+      step.run(365)
+    end
+
   end
 
   describe '#body' do
