@@ -18,12 +18,12 @@ Pushpop is a simple but powerful Ruby app that sends notifications about events 
 
 #### Ways to use Pushpop
 
-**Alerts**
+##### Alerts
 
 + Send an email when your site has been busier than usual in the last hour
 + Send an SMS if the performance of your signup funnel dramatically changes
 
-**Recurring reports**
+##### Recurring reports
 
 + Send a sales report to your inbox every day at noon
 + Send analytics reports to your customers every week
@@ -89,7 +89,7 @@ The goal of the Quickstart is to get a Pushpop instance running locally and writ
 
 #### Steps
 
-**Clone this repository**
+##### Clone this repository
 
 ``` shell
 $ git clone git@github.com:keenlabs/pushpop.git
@@ -103,7 +103,7 @@ $ gem install bundler
 $ bundle install
 ```
 
-**Test the included example job**
+##### Test the included example job
 
 There is an example job in [jobs/example_job.rb](jobs/example_job.rb). All it does is print some output to the console. Run this job via a rake task to make sure your configuration is setup properly.
 
@@ -118,7 +118,7 @@ Hey Pushpop, let's do a math!
 <pre>The number 30!</pre>
 ```
 
-**Specify your API credentials**
+##### Specify your API credentials
 
 Now it's time to write a job that connects to APIs and does something real. For that we'll need to specify API keys. We'll use [foreman](https://github.com/ddollar/foreman) to tell Pushpop about these API keys. When you use foreman to run a process, it adds variables from a local `.env` file to the process environment. It's very handy for keeping secure API keys out of your code (`.env` files are gitignored by Pushpop).
 
@@ -135,7 +135,7 @@ TWILIO_FROM=*********
 TWILIO_SID=*********
 ```
 
-**Write your first job**
+##### Write your first job
 
 Let's write a job that performs a count of one of your Keen IO collections and sends an email (or SMS) with the result. We'll set it to run every 24 hours.
 
@@ -182,7 +182,7 @@ $ foreman run rake jobs:run_once[jobs/first_job.rb]
 
 The output of each step will be logged to the console. If everything worked you'll receive an email or a text message within a few seconds!
 
-**Next steps**
+##### Next steps
 
 + Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do. See [pushpop-recipes](https://github.com/keenlabs/pushpop-recipes) for reusable code and inspiration!
 + Continue on to the [Deploy Guide](#deploy-guide) to deploy the job you just created.
@@ -193,11 +193,11 @@ The output of each step will be logged to the console. If everything worked you'
 
 These instructions are for Heroku, but should be relevant to most environments.
 
-**Prerequisites**
+##### Prerequisites
 
 You'll need a [Heroku](https://heroku.com/) account, and the [Heroku toolbelt](https://toolbelt.heroku.com/) installed.
 
-**Create a new Heroku app**
+##### Create a new Heroku app
 
 Make sure you're inside a Pushpop project directory, than create a new Heroku app.
 
@@ -207,7 +207,7 @@ $ heroku create
 
 This will create a Heroku app and add a new git remote destination called `heroku` to your git configuration.
 
-**Commit changes**
+##### Commit changes
 
 If you created a new job from the Quickstart guide, you'll want to commit that code before deploying.
 
@@ -215,7 +215,7 @@ If you created a new job from the Quickstart guide, you'll want to commit that c
 $ git commit -am 'Created my first Pushpop job'
 ```
 
-**Set Heroku config variables**
+##### Set Heroku config variables
 
 The easiest way to do this is with the [heroku-config](https://github.com/ddollar/heroku-config) plugin. This step assumes you have created a `.env` file containing your keys as demonstrated in the Quickstart guide.
 
@@ -224,7 +224,7 @@ $ heroku plugins:install git://github.com/ddollar/heroku-config.git
 $ heroku config:push
 ```
 
-**Deploy code to Heroku**
+##### Deploy code to Heroku
 
 Now that your code is commited and config variables pushed we can begin a deploy.
 
@@ -232,7 +232,7 @@ Now that your code is commited and config variables pushed we can begin a deploy
 $ git push heroku master
 ```
 
-**Tail logs to confirm it's working**
+##### Tail logs to confirm it's working
 
 To see that jobs are running and that there are no errors, tail the logs on Heroku.
 
@@ -548,7 +548,7 @@ end
 
 Pushpop can also be embedded in existing Ruby projects as a Ruby gem. Here's some steps on how to do that.
 
-**Install the gem**
+##### Install the gem
 
 ``` ruby
 # bundler
@@ -558,7 +558,7 @@ gem 'pushpop'
 gem install 'pushpop'
 ```
 
-**Require job files and run**
+##### Require job files and run
 
 Once the gem is available you can load or require Pushpop job files. Once each file loads the jobs it contains are ready to be run or scheduled. Here's that sequence:
 
@@ -580,14 +580,14 @@ Pushpop plugins like Sendgrid or Twilio you'll need to bundle and require those 
 
 Issues and pull requests are very welcome!
 
-**Wishlist**
+##### Wishlist
 
 + Add plugins for more data collection and email/SMS/notification services
 + Add a web interface that shows job names, previous job results, and countdowns to the next run
 + Add a web interface for previewing emails in the browser
 + Add beautiful email templates with support for typical Keen IO query responses (groups, series, etc)
 
-**Testing**
+##### Testing
 
 Please make sure the specs pass before you submit your pull request. Pushpop has a full set of specs (including plugins). Run them like this:
 
