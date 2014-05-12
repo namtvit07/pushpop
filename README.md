@@ -1,7 +1,7 @@
 # Pushpop
 [![Build Status](https://travis-ci.org/keenlabs/pushpop.svg)](https://travis-ci.org/keenlabs/pushpop)
 
-### Automatic delivery of regular reports and alerts 
+### Send alerts and recurring reports based on Keen IO events
 
 <hr>
 <img src="http://f.cl.ly/items/1I421w263a10340a0u2q/Screen%20Shot%202014-04-16%20at%204.35.47%20PM.png" width="45%" alt="Pingpong Daily Response Time Report">
@@ -11,23 +11,23 @@
 
 ## Overview
 
-Pushpop is a simple but powerful Ruby app that sends notifications based on events captured with Keen IO.
+Pushpop is a simple but powerful Ruby app that sends notifications about events captured with Keen IO.
 
 #### Ways to use Pushpop
 
-**Regular reports**
+**Alerts**
+
++ Send an email when your site has been busier than usual in the last hour
++ Send an SMS if the performance of your signup funnel dramatically changes
+
+**Recurring reports**
 
 + Send a sales report to your inbox every day at noon
 + Send analytics reports to your customers every week
 
-**Alerts**
-
-+ Send an SMS if the performance of your signup funnel dramatically changes
-+ Send an email when your site has been busier than usual in the last hour
-
 #### An example Pushpop job
 
-Here's a simple Pushpop job that uses [Twilio](https://twilio.com/) to send an SMS containing the number of daily pageviews each night at midnight:
+Here's a simple Pushpop job that uses [Twilio](https://twilio.com/) to send an SMS containing the number of daily pageviews. This job runs every night at midnight.
 
 ``` ruby
 require 'pushpop'
@@ -50,13 +50,13 @@ job do
 end
 ```
 
-Pushpop syntax is short and sweet, but because anything Ruby can be used it's also quite powerful.
+Pushpop syntax is short and sweet, but because Pushpop is just Ruby it's also quite powerful.
 
-### Where to next?
+### Get Started
 
 Excited to try out Pushpop with your data? Here's a few options to choose from:
 
-#### Quickstart
+#### The Quickstart
 
 Setup Pushpop locally. It takes 10 minutes to get that first shiny report in your inbox, and even less if you already have a Keen IO, Sendgrid or Twilio account.
 
@@ -64,13 +64,13 @@ Setup Pushpop locally. It takes 10 minutes to get that first shiny report in you
 
 #### Deploy a Pushpop Instance
 
-Ready to deploy the Pushpop job you wrote locally and start getting regular reports? Detailed instructions for Heroku are provided, as well as the basics for other platforms.
+Ready to deploy a local Pushpop job? Detailed instructions for Heroku are provided, as well as the basics for other platforms.
 
 **[Go to the Deploy Guide](#deploy-guide)**
 
 #### Need help?
 
-Don't have a hacker at hand? The friendly folks at Keen IO are happy to help you get a Pushpop instance running.
+Don't have a hacker on hand? The friendly folks at Keen IO can set everything up for you.
 
 **Email [team@keen.io](mailto:team@keen.io?subject=I want a Pushpop!)** with the subject "I want a Pushpop!"
 
@@ -80,9 +80,9 @@ The goal of the Quickstart is to get a Pushpop instance running locally. This sh
 
 #### Prerequisites
 
-+ A working Ruby installation (1.9+)
-+ A [Keen IO](https://keen.io) account and project and associated API keys
-+ A [Sendgrid](https://sendgrid.com) and/or [Twilio](https://twilio.com) account and associated API keys
++ A working [Ruby installation](https://www.ruby-lang.org/en/installation/) (1.9+)
++ A [Keen IO](https://keen.io) account, project, and API keys
++ A [Sendgrid](https://sendgrid.com) and/or [Twilio](https://twilio.com) account and API keys
 
 #### Steps
 
@@ -92,7 +92,7 @@ The goal of the Quickstart is to get a Pushpop instance running locally. This sh
 $ git clone git@github.com:keenlabs/pushpop.git
 ```
 
-Enter the pushpop directory and install dependencies.
+Enter the `pushpop` directory and install dependencies.
 
 ``` shell
 $ cd pushpop
@@ -167,20 +167,20 @@ job do
 end
 ```
 
-Now modify the example to use your specific information. You'll want to specify a `to` and a `from` address if you're using Sendgrid, and a `to` phone number if you're using Twilio. Everything you need to change is marked with `<>`. You'll also want to remove either Sendgrid or Twilio blocks you're not using them.
+Now modify the example to use your specific information. You'll want to specify a `to` and a `from` address if you're using Sendgrid, and a `to` phone number if you're using Twilio. Everything you need to change is marked with `<>`. You'll also want to remove either Sendgrid or Twilio block if you're not using it.
 
-Save the file and test this job using the same `jobs:run_once` rake task that we used before.
+Save the file and test this job the `jobs:run_once` rake task:
 
 ``` shell
 $ foreman run rake jobs:run_once[jobs/first_job.rb]
 ```
 
-The output of each step will be logged to the console, and if everything worked you'll receive an email or a text message within a few seconds!
+The output of each step will be logged to the console. If everything worked you'll receive an email or a text message within a few seconds!
 
 **Next steps**
 
-+ Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do.
-+ Continue on to the deploy guide to deploy a Pushpop instance and start getting regular reports and alerts.
++ Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do. See [pushpop-recipes](https://github.com/keenlabs/pushpop-recipes) for reusable code and inspiration.
++ Continue on to the [Deploy Guide](#deploy-guide) to deploy the job you just created.
 
 ## Deploy Guide
 
@@ -190,15 +190,17 @@ These instructions are for Heroku, but should be relevant to most environments.
 
 **Prerequisites**
 
-You'll need a Heroku account, and the [Heroku toolbelt](https://toolbelt.heroku.com/) installed.
+You'll need a [Heroku](https://heroku.com/) account, and the [Heroku toolbelt](https://toolbelt.heroku.com/) installed.
 
 **Create a new Heroku app**
 
-Make sure you're inside the Pushpop directory.
+Make sure you're inside a Pushpop project directory, than create a new Heroku app.
 
 ``` shell
 $ heroku create
 ```
+
+This will create a Heroku app and add a new git remote destination called `heroku` to your git configuration.
 
 **Commit changes**
 
@@ -235,12 +237,11 @@ $ heroku logs --tail
 
 Note that if you have jobs that are set to run at specific times of day you might not see output for a while.
 
-Also note - by default this will run all jobs in the `jobs` folder. You might want to delete the `example_job.rb` file in
-a separate commit once you've got the hang of things.
+Another note - by default this will run all jobs in the `jobs` folder. You might want to delete the `example_job.rb` file in a separate commit once you've got the hang of things.
 
 ##### Other environments
 
-Pushpop is run entirely by one long-running Ruby process. Anywhere you can run this process in a monitored fashion you can run a Pushpop instance. Here's the command:
+Pushpop is run entirely by one long-running Ruby process. Anywhere you can run this process you can run a Pushpop instance. Here's the command:
 
 ``` shell
 $ foreman run rake jobs:run
@@ -252,7 +253,11 @@ If you don't want to use foreman and prefer to set the environment variables you
 $ bundle exec rake jobs:run
 ```
 
+Note: You may want to monitor the process via something like [supervisord](http://supervisord.org/).
+
 ## Rake Tasks
+
+Pushpop comes with some rake tasks to make command line interaction and deployment easier.
 
 All `jobs:*` rake tasks optionally take a single filename as a parameter. The file is meant to contain one or more Pushpop jobs. If no filename is specified, all jobs in the jobs folder are considered.
 
@@ -271,7 +276,7 @@ Here's a list of the available rake tasks:
 
 ## Pushpop API Documentation
 
-Steps and jobs are the heart of the Pushpop workflow. Ruby jobs files contain one or more jobs, and each job consists of one or more steps.
+Steps and jobs are the heart of the Pushpop workflow. Job files are written in pure Ruby and contain one or more jobs. Each job consists of one or more steps.
 
 #### Jobs
 
@@ -280,7 +285,7 @@ Jobs have the following attributes:
 + `name`: (optional) something that describe the job, useful in logs
 + `every_duration`: the frequency at which to run the job
 + `every_options` (optional): options related to when the job runs
-+ `steps`: the ordered list of steps to run
++ `steps`: an ordered list of steps to run
 
 These attributes are easily specified using the DSL's block syntax. Here's an example:
 
@@ -293,11 +298,12 @@ job 'print job' do
 end
 ```
 
-Inside of a `job` configuration block, steps are added by using the `step` method. They can also be
-added by using a method registered by a plugin, like `keen` or `twilio`. For more information, see [Plugin Documentation](#plugin-documentation).
+The name of this job is 'print job'. It runs every 5 minutes and it has 1 step.
 
-The frequency of the job is set via the `every` method. This is basically a passthrough to Clockwork.
-Here are some cool things you can do with regard to scheduling:
+Inside of a `job` configuration block, steps are added by using the `step` method. They can also be
+added by using a method registered by a plugin, like `keen` or `twilio`. For more information on plugins see [Plugin Documentation](#plugin-documentation).
+
+The frequency of the job's execution is set via the `every` method. This is basically a passthrough to the [Clockwork](https://github.com/tomykaira/clockwork) long-running process scheduler. Here are some cool things you can do with regard to setting times and days:
 
 ``` ruby
 every 5.seconds
@@ -380,11 +386,11 @@ In this example, the `twilio` step will only be ran if the `keen` step returned 
 
 Steps have the following attributes:
 
-+ `name`: (optional) something that describes the step. Useful in logs, and is the key in the `step_responses` hash. Defaults to plugin name if a plugin is used
++ `name`: (optional) something that describes the step. Useful in logs, and is the key in the `step_responses` hash. Defaults to plugin name if a plugin is used. If you use the same plugin more than twice, you'll need to give steps individual names.
 + `plugin`: (optional) if the step is backed by a plugin, it's the name of the plugin
 + `block`: A block that runs to configure the step (when a plugin is used) or run it
 
-Steps can be pure Ruby code or leverage a plugin DSL. Plugins are just fancy abstractions for creating steps.
+Steps can be pure Ruby code or use a DSL provided by a plugin. Plugins are just fancy abstractions for creating steps.
 
 Steps have built-in support for ERB templating. This is useful for generating more complex emails and reports.
 
@@ -396,16 +402,13 @@ sendgrid do |response, step_responses|
   from 'pushpopapp+123@keen.io'
   subject 'Pingpong Daily Response Time Report'
   body template 'pingpong_report.html.erb', response, step_responses
-  preview false
 end
 ```
 
-`template` is a function that renders a template in context of the step responses and returns a string.
-The first argument is a template file name, located in the `templates` directory by default.
-The second and third arguments are the `response` and `step_responses` respectively.
-An optional fourth parameter can be used to change the path templates are looked up in.
+`template` is a function that renders a template in context of the `response` and `step_responses` and returns a string.
+The first argument is a template file name, located in the `templates` directory by default. The second and third arguments are the `response` and `step_responses` respectively. An optional fourth parameter can be used to change the path templates are looked up in.
 
-Here's a very simple template:
+Here's a very simple template that uses the `response` variable in context:
 
 ``` erb
 <h1>Daily Report</h1>
@@ -423,14 +426,12 @@ Plugins are located at `lib/plugins`. They are loaded automatically.
 
 ##### Keen
 
-The `keen` plugin gives you a DSL to specify Keen query parameters. When it runs, it
-passes those parameters to the [keen gem](https://github.com/keenlabs/keen-gem), which
-in turn runs the query against the Keen IO API.
+The `keen` plugin gives you a DSL to specify Keen query parameters. Those query parameters are used to query data using the [keen-gem](https://github.com/keenlabs/keen-gem).
 
-Here's an example that shows most of the options you can specify:
+Here's an example that shows many of the options you can specify:
 
 ``` ruby
-job 'daily average response time by check for successful requests in april' do
+job 'average response time for successful requests last month' do
 
   keen do
     event_collection  'checks'
@@ -438,7 +439,7 @@ job 'daily average response time by check for successful requests in april' do
     target_property   'request.duration'
     group_by          'check.name'
     interval          'daily'
-    timeframe         ({ start: '2014-04-01T00:00Z' })
+    timeframe         'last_month',
     filters           [{ property_name: "response.successful",
                          operator: "eq",
                          property_value: true }]
@@ -447,10 +448,13 @@ job 'daily average response time by check for successful requests in april' do
 end
 ```
 
-The `keen` plugin requires that the following environment variables are set: `KEEN_PROJECT_ID` and `KEEN_READ_KEY`.
-
 A `steps` method is also supported for [funnels](https://keen.io/docs/data-analysis/funnels/),
 as well as `analyses` for doing a [multi-analysis](https://keen.io/docs/data-analysis/multi-analysis/).
+
+The `keen` plugin requires that the following environment variables are set:
+  
++ `KEEN_PROJECT_ID`
++ `KEEN_READ_KEY`
 
 ##### Sendgrid
 
@@ -472,21 +476,24 @@ job 'send an email' do
 end
 ```
 
-The `sendgrid` plugin requires that the following environment variables are set: `SENDGRID_DOMAIN`, `SENDGRID_USERNAME`, and `SENDGRID_PASSWORD`.
+The `preview` directive is optional and defaults to false. If you set it to true the email contents will print out
+to the console but the email will not be sent.
 
-The `preview` directive is optional and defaults to false. If you set it to true, the email contents will print out
-to the console, but the email will not be sent.
-
-The `body` method can take a string, or it can take the same parameters as `template`,
-in which case it will render a template to create the body. For example:
+The `body` method can take a string, or it can take the same parameters as `template`, in which case it will render a template to create the body. For example:
 
 ``` ruby
 body 'pingpong_report.html.erb', response, step_responses
 ```
 
+The `sendgrid` plugin requires that the following environment variables are set: 
+
++ `SENDGRID_DOMAIN`
++ `SENDGRID_USERNAME`
++ `SENDGRID_PASSWORD`
+
 ##### Twilio
 
-The `twilio` plugin provides DSL to specify SMS recipient information as well as the text itself.
+The `twilio` plugin provides a DSL to specify SMS recipient information as well as the message itself.
 
 Here's an example:
 
@@ -494,44 +501,47 @@ Here's an example:
 job 'send a text' do
 
   twilio do
-    to '18005555555'
-    body 'Breathe in through the nose, out through the mouth.'
+    to '+18005555555'
+    body 'Quick, move your car!'
   end
 
 end
 ```
 
-The `twilio` plugin requires that the following environment variables are set: `TWILIO_AUTH_TOKEN`, `TWILIO_SID`, and `TWILIO_FROM`.
+The `twilio` plugin requires that the following environment variables are set:
+
++ `TWILIO_AUTH_TOKEN`
++ `TWILIO_SID`
++ `TWILIO_FROM`
 
 ## Creating plugins
 
-Plugins are just subclasses of `Pushpop::Step`. Plugins should implement a run method, and
-register themselves. Here's a simple plugin that stops job execution if the input into the step is 0:
+Plugins are just subclasses of `Pushpop::Step`. Plugins should implement a `run` method and register themselves. Here's a simple plugin that stops job execution if the input into the step is 0:
 
 ``` ruby
 module Pushpop
-  class BreakIfZero < Step
-    PLUGIN_NAME = 'break_if_zero'
+  class StopIfZero < Step
+    PLUGIN_NAME = 'stop_if_zero'
     def run(last_response=nil, step_responses=nil)
       last_response == 0
     end
   end
 
-  Pushpop::Job.register_plugin(BreakIfZero::PLUGIN_NAME, BreakIfZero)
+  Pushpop::Job.register_plugin(StopIfZero::PLUGIN_NAME, StopIfZero)
 end
 
-# now in your job you can use the break_if_zero step
+# now in your job you can use the stop_if_zero step
 
 job do
   step do [0, 1].shuffle.first end
-  break_if_zero
+  stop_if_zero
   step do puts 'made it through!' end
 end
 ```
 
 ## Usage as a Ruby gem
 
-Pushpop is also a Ruby gem, so you can add it to an existing Ruby project. Here's how to do that:
+Pushpop can also be embedded in existing Ruby projects as a Ruby gem. Here's some steps on how to do that.
 
 **Install the gem**
 
@@ -545,13 +555,12 @@ gem install 'pushpop'
 
 **Require job files and run**
 
-Once the gem is available, you should be able to load in Pushpop job files. Once a file loads,
-all of its jobs are ready to be run or scheduled.
+Once the gem is available you can load or require Pushpop job files. Once each file loads the jobs it contains are ready to be run or scheduled. Here's that sequence:
 
 ``` ruby
 load 'some_job.rb'
 
-# run the jobs once
+# you could run the jobs once
 Pushpop.run
 
 # or schedule and run the jobs with clockwork
@@ -559,23 +568,23 @@ Pushpop.schedule
 Clockwork.manager.run
 ```
 
-Note that `pushpop` does not declare dependencies other than `clockwork` and `keen`. If you're using
-Pushpop plugins like Sendgrid or Twilio you'll need to install and require those dependencies explicitly.
+The `pushpop` gem does not declare dependencies other than `clockwork` and `keen`. If you're using
+Pushpop plugins like Sendgrid or Twilio you'll need to bundle and require those dependencies separately.
 
 ## Contributing
 
-Issues and pull requests are welcome!
+Issues and pull requests are very welcome!
 
 **Wishlist**
 
-+ Add plugins for more data collection and notification services
-+ Add a web interface that shows the job names, job results, and a countdown to the next run
-+ Add a web interface that lets you preview emails in the browser
-+ Beautiful email templates with support for typical Keen IO query responses (groups, series, etc)
++ Add plugins for more data collection and email/SMS/notification services
++ Add a web interface that shows job names, previous job results, and countdowns to the next run
++ Add a web interface for previewing emails in the browser
++ Add beautiful email templates with support for typical Keen IO query responses (groups, series, etc)
 
 **Testing**
 
-Pushpop has a full set of specs (including plugins). Run them like this:
+Please make sure the specs pass before you submit your pull request. Pushpop has a full set of specs (including plugins). Run them like this:
 
 ``` shell
 $ bundle exec rake spec
