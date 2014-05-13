@@ -24,9 +24,6 @@ module Pushpop
 
       if _to && _from && _body
         send_message(_to, _from, _body)
-      else
-        Pushpop.logger.warn('Message not sent. One of to, from, or body was missing.')
-        false
       end
     end
 

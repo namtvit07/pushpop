@@ -36,8 +36,6 @@ module Pushpop
 
       if _to && _from && _subject && _body
         send_email(_to, _from, _subject, _body)
-      else
-        Pushpop.logger.warn('Email not sent. One of to, from, subject, or body was missing.')
       end
     end
 
@@ -80,7 +78,7 @@ module Pushpop
       if args.length == 1
         self._body = args.first
       else
-        self._body = template *args
+        self._body = template(*args)
       end
     end
 
