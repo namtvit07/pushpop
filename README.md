@@ -431,7 +431,13 @@ for doing common things with Pushpop. Check it out for some inspiration!
 
 ## Plugin Documentation
 
-Plugins are located at `lib/plugins`. They are loaded automatically.
+Plugins are located at `lib/plugins`. They can be included explicitly via:
+
+``` ruby
+Pushpop.load_plugin '<plugin_name>'
+```
+
+Pushpop will also attempt to auto-include them if a step name is invoked that isn't defined yet.
 
 ##### Keen
 

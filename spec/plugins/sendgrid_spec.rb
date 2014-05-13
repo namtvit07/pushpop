@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+Pushpop.load_plugin('sendgrid')
+
 SPEC_TEMPLATES_DIRECTORY ||= File.expand_path('../../templates', __FILE__)
 
 describe Pushpop::Sendgrid do

@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+Pushpop.load_plugin('twilio')
+
 SPEC_TEMPLATES_DIRECTORY ||= File.expand_path('../../templates', __FILE__)
 
 describe Pushpop::Twilio do

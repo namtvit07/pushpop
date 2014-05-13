@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+Pushpop.load_plugin('keen')
+
 describe Pushpop::Keen do
 
   describe '#configure' do

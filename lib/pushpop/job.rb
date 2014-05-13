@@ -80,6 +80,16 @@ module Pushpop
     def method_missing(method, *args, &block)
       plugin_class = self.class.plugins[method.to_s]
 
+      unless plugin_class
+        begin
+          Pushpop.load_plugin method.to_s
+          plugin_class = self.class.plugins[method.to_s]
+          raise "Plugin not loaded: #{method.to_s}" if plugin_class.nil?
+        rescue LoadError
+          Pushpop.logger.warn("Could not find plugin #{method.to_s}")
+        end
+      end
+
       name = args[0]
       plugin = method.to_s
 

@@ -142,6 +142,12 @@ describe Pushpop::Job do
       simple_job.steps.first.class.should == FakeStep
     end
 
+    it 'should autoinclude plugins' do
+      Pushpop::Job.new do
+        keen do end
+      end
+    end
+
     it 'should raise an exception if there is no registered plugin' do
       expect {
         job do

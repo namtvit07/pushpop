@@ -4,11 +4,6 @@ require 'pushpop/version'
 require 'pushpop/job'
 require 'pushpop/step'
 
-# require all plugins
-Dir["#{File.expand_path('../plugins/*', __FILE__)}.rb"].each { |file|
-  require file
-}
-
 module Pushpop
   class << self
     cattr_accessor :logger
@@ -32,6 +27,10 @@ module Pushpop
 
     def schedule
       self.jobs.map &:schedule
+    end
+
+    def load_plugin(name)
+      load "#{File.expand_path("../plugins/#{name}", __FILE__)}.rb"
     end
   end
 end
