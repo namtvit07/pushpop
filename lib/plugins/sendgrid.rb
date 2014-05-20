@@ -96,7 +96,6 @@ module Pushpop
 To: #{self._to}
 From: #{self._from}
 Subject: #{self._subject}
-Attachment:  #{self._attachment}
 
       #{self._body}
 MESSAGE
