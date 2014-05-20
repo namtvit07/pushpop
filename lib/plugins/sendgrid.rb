@@ -21,6 +21,7 @@ module Pushpop
     attr_accessor :_subject
     attr_accessor :_body
     attr_accessor :_preview
+    attr_accessor :_attachment 
 
     def run(last_response=nil, step_responses=nil)
 
@@ -33,17 +34,19 @@ module Pushpop
       _from = self._from
       _subject = self._subject
       _body = self._body
+      _attachment = self._attachment
 
       if _to && _from && _subject && _body
-        send_email(_to, _from, _subject, _body)
+        send_email(_to, _from, _subject, _body, _attachment)
       end
     end
 
-    def send_email(_to, _from, _subject, _body)
+    def send_email(_to, _from, _subject, _body, _attachment)
       Mail.deliver do
         to _to
         from _from
         subject _subject
+        add_file _attachment if _attachment
         text_part do
           body _body
         end
@@ -82,6 +85,10 @@ module Pushpop
       end
     end
 
+    def attachment(_attachment)
+      self._attachment = _attachment
+    end
+
     private
 
     def print_preview
@@ -89,6 +96,7 @@ module Pushpop
 To: #{self._to}
 From: #{self._from}
 Subject: #{self._subject}
+Attachment:  #{self._attachment}
 
       #{self._body}
 MESSAGE
