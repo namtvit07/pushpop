@@ -640,3 +640,10 @@ Please make sure the specs pass before you submit your pull request. Pushpop has
 ``` shell
 $ bundle exec rake spec
 ```
+
+## Inspirations
+
+> "Technology shouldn't require all of our attention, just some of it, and only when necessary."
+> [calmtechnology.com](http://calmtechnology.com/)
+
+Dashboards and reports are human presentation vehicles. They require our attention in order to gain meaning. That's great when we're actively seeking answers and want to explore. But as a means to become aware of interesting, timely events it's neither effective nor efficient. A tool like Pushpop works better in those cases. It's a calmer technology.
