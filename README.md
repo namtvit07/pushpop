@@ -473,7 +473,7 @@ The `keen` plugin requires that the following environment variables are set:
 
 ##### Sendgrid
 
-The `sendgrid` plugin gives you a DSL to specify email parameters like subject and body.
+The `sendgrid` plugin gives you a DSL to specify typical email parameters.
 
 Here's an example:
 
@@ -481,27 +481,28 @@ Here's an example:
 job 'send an email' do
 
   sendgrid do
-    to        'josh+pushpop@keen.io'
-    from      'pushpopapp+123@keen.io'
-    subject   'Is your inbox lonely?'
-    attachment '/funny_images/sad_inbox.jpeg'
-    body      'This email was intentionally left blank.'
-    preview   false
+    to          'josh+pushpop@keen.io'
+    from        'pushpopapp+123@keen.io'
+    subject     'Is your inbox lonely?'
+    attachment  '/funny_images/sad_inbox.jpeg'
+    body        'This email was intentionally left blank.'
+    preview     false
   end
 
 end
 ```
+The `to`, `from`, and `subject` methods should be self-explanatory. All expect strings.
 
-The `preview` directive is optional and defaults to false. If you set it to true the email contents will print out
-to the console but the email will not be sent.
-
-The `attachment` method is optional and takes a path to the desired file to be attached.
-
-The `body` method can take a string, or it can take the same parameters as `template`, in which case it will render a template to create the body. For example:
+The `body` method can take a string, or it can take the same parameters as the `template` method provided by the base step class. This example will use the rendered template contents as the body:
 
 ``` ruby
 body 'pingpong_report.html.erb', response, step_responses
 ```
+
+The `attachment` method is optional and takes a path to a file to be attached.
+
+The `preview` setting is optional and defaults to false. If you set it to true the email contents will print out
+to the console but the email will not be sent.
 
 The `sendgrid` plugin requires that the following environment variables are set: 
 
