@@ -70,5 +70,15 @@ describe Pushpop::Sendgrid do
     end
 
   end
+  
+  describe '#attachment' do
+
+    it 'should attach a file to an email' do
+      step = Pushpop::Sendgrid.new
+      step.attachment 'huzzah.txt'
+      step._attachment.should == 'huzzah.txt'
+    end
+
+  end
 
 end
