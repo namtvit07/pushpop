@@ -484,6 +484,7 @@ job 'send an email' do
     to        'josh+pushpop@keen.io'
     from      'pushpopapp+123@keen.io'
     subject   'Is your inbox lonely?'
+    attachment '/funny_images/sad_inbox.jpeg'
     body      'This email was intentionally left blank.'
     preview   false
   end
@@ -493,6 +494,8 @@ end
 
 The `preview` directive is optional and defaults to false. If you set it to true the email contents will print out
 to the console but the email will not be sent.
+
+The `attachment` method is optional and takes a path to the desired file to be attached.
 
 The `body` method can take a string, or it can take the same parameters as `template`, in which case it will render a template to create the body. For example:
 
