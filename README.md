@@ -234,7 +234,7 @@ Now that your code is commited and config variables pushed we can begin a deploy
 
 ``` shell
 $ git push heroku master
-& heroku scale worker=1
+$ heroku scale worker=1
 ```
 
 ##### Tail logs to confirm it's working
