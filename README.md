@@ -230,10 +230,11 @@ $ heroku config:push
 
 ##### Deploy code to Heroku
 
-Now that your code is commited and config variables pushed we can begin a deploy.
+Now that your code is commited and config variables pushed we can begin a deploy. We'll also need to scale the number of worker processes to 1.
 
 ``` shell
 $ git push heroku master
+& heroku scale worker=1
 ```
 
 ##### Tail logs to confirm it's working
