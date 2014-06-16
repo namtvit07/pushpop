@@ -2,7 +2,7 @@
 <img align="center" src="http://f.cl.ly/items/0z182V2i3X0Q0Y3I2A2G/pushpop-logo.png"> 
 </p>
 
-[![Build Status](https://travis-ci.org/keenlabs/pushpop.svg)](https://travis-ci.org/keenlabs/pushpop)
+[![Build Status](https://travis-ci.org/pushpop-project/pushpop.svg)](https://travis-ci.org/pushpop-project/pushpop)
 
 ### Send alerts and recurring reports based on Keen IO events
 
@@ -96,7 +96,7 @@ The goal of the Quickstart is to get a Pushpop instance running locally and writ
 ##### Clone this repository
 
 ``` shell
-$ git clone git@github.com:keenlabs/pushpop.git
+$ git clone git@github.com:pushpop-project/pushpop.git
 ```
 
 Enter the `pushpop` directory and install dependencies.
@@ -188,7 +188,7 @@ The output of each step will be logged to the console. If everything worked you'
 
 ##### Next steps
 
-+ Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do. See [pushpop-recipes](https://github.com/keenlabs/pushpop-recipes) for reusable code and inspiration!
++ Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do. See [pushpop-recipes](https://github.com/pushpop-project/pushpop-recipes) for reusable code and inspiration!
 + Continue on to the [Deploy Guide](#deploy-guide) to deploy the job you just created.
 
 ## Deploy Guide
@@ -427,7 +427,7 @@ Here's a very simple template that uses the `response` variable in context:
 
 ## Recipes
 
-The community-driven [pushpop-recipes](https://github.com/keenlabs/pushpop-recipes) repository contains jobs and templates
+The community-driven [pushpop-recipes](https://github.com/pushpop-project/pushpop-recipes) repository contains jobs and templates
 for doing common things with Pushpop. Check it out for some inspiration!
 
 ## Plugin Documentation
