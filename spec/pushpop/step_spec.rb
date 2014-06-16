@@ -24,9 +24,9 @@ describe Pushpop::Step do
 
     it 'should set name to plugin name if not given' do
       empty_proc = Proc.new {}
-      step = Pushpop::Step.new(nil, 'keen', &empty_proc)
-      step.name.should == 'keen'
-      step.plugin.should == 'keen'
+      step = Pushpop::Step.new(nil, 'whee', &empty_proc)
+      step.name.should == 'whee'
+      step.plugin.should == 'whee'
       step.block.should == empty_proc
     end
 

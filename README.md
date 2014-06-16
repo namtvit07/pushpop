@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/pushpop-project/pushpop.svg)](https://travis-ci.org/pushpop-project/pushpop)
 
-### Send alerts and recurring reports based on Keen IO events
+### A framework for scheduled integrations
 
 <hr>
 <img src="http://f.cl.ly/items/1I421w263a10340a0u2q/Screen%20Shot%202014-04-16%20at%204.35.47%20PM.png" width="45%" alt="Pingpong Daily Response Time Report">
@@ -14,7 +14,11 @@
 
 ## Overview
 
-Pushpop is a simple but powerful Ruby app that sends notifications about events captured with the [Keen IO](https://keen.io) Analytics API.
+Pushpop is a simple but powerful Ruby gem that lets you share data between services at regular intervals.
+This can be used to do things like regular data collection as well as triggering alerts based on patterns in data.
+
+Pushpop includes support for sending notifications and reports based on events captured with [Keen IO](https://keen.io).
+See plugins for more services on the [Pushpop organization](https://github.com/pushpop-project) home page.
 
 #### Ways to use Pushpop
 
@@ -30,10 +34,11 @@ Pushpop is a simple but powerful Ruby app that sends notifications about events 
 
 #### An example Pushpop job
 
-This Pushpop job sends a nightly email at midnight containing the day's number of pageviews:
+This Pushpop job uses the `keen` and `sendgrid` plugins to send a nightly email containing the day's number of pageviews:
 
 ``` ruby
-require 'pushpop'
+require 'pushpop-keen'
+require 'pushpop-sendgrid'
 
 job do
 
@@ -44,10 +49,10 @@ job do
     analysis_type     'count'
     timeframe         'last_24_hours'
   end
-  
+
   sendgrid do |response, _|
     to        'josh+pushpop@keen.io'
-    from      'pushpop-app@keen.io'
+    from      'josh+pushpop@keen.io'
     subject   'Pushpop Daily Pageviews Report'
     body      "There were #{response} pageviews today!"
   end
@@ -55,7 +60,7 @@ job do
 end
 ```
 
-The email is sent by [Sendgrid](https://sendgrid.com), made possible by the `sendgrid` Pushpop plugin.
+The email is sent by [Sendgrid](https://sendgrid.com), made possible by the [sendgrid](https://github.com/pushpop-project/pushpop-sendgrid) Pushpop plugin.
 
 Pushpop syntax is short and sweet, but because Pushpop is just Ruby it's also quite powerful.
 
@@ -65,7 +70,7 @@ Excited to try out Pushpop with your Keen IO projects? Here's a few options to c
 
 #### The Quickstart
 
-Setup Pushpop locally. It takes 10 minutes to get that first shiny report in your inbox, and even less if you already have a Keen IO, Sendgrid or Twilio account.
+Setup Pushpop locally and run your first job in minutes.
 
 **[Go to the Quickstart](#quickstart)**
 
@@ -88,31 +93,29 @@ The goal of the Quickstart is to get a Pushpop instance running locally and writ
 #### Prerequisites
 
 + A working [Ruby installation](https://www.ruby-lang.org/en/installation/) (1.9+)
-+ A [Keen IO](https://keen.io) account, project, and API keys
-+ A [Sendgrid](https://sendgrid.com) and/or [Twilio](https://twilio.com) account and API keys
 
 #### Steps
 
-##### Clone this repository
+##### Clone the Pushpop starter project
 
 ``` shell
-$ git clone git@github.com:pushpop-project/pushpop.git
+$ git clone git@github.com:pushpop-project/pushpop-starter.git
 ```
 
-Enter the `pushpop` directory and install dependencies.
+Enter the `pushpop-starter` directory and install dependencies.
 
 ``` shell
-$ cd pushpop
+$ cd pushpop-starter
 $ gem install bundler
 $ bundle install
 ```
 
-##### Test the included example job
+##### Test the included job
 
-There is an example job in [jobs/example_job.rb](jobs/example_job.rb). All it does is print some output to the console. Run this job via a rake task to make sure your configuration is setup properly.
+There is an example job in `jobs/example_job.rb` of the pushpop-starter repository. It simply prints output to the console. Run this job via a rake task to make sure your configuration is setup properly.
 
 ``` shell
-$ foreman run rake jobs:run_once[jobs/example_job.rb]
+$ bundle exec rake jobs:run_once[jobs/example_job.rb]
 ```
 
 You should see the following output (followed by a logging statement):
@@ -122,73 +125,12 @@ Hey Pushpop, let's do a math!
 <pre>The number 30!</pre>
 ```
 
-##### Specify your API credentials
-
-Now it's time to write a job that connects to APIs and does something real. For that we'll need to specify API keys. We'll use [foreman](https://github.com/ddollar/foreman) to tell Pushpop about these API keys. When you use foreman to run a process, it adds variables from a local `.env` file to the process environment. It's very handy for keeping secure API keys out of your code (`.env` files are gitignored by Pushpop).
-
-Create a `.env` file in the project directory and add the API configuration properties and keys that you have. Here's what an example file looks like with settings from all three services:
-
-```
-KEEN_PROJECT_ID=*********
-KEEN_READ_KEY=*********
-SENDGRID_DOMAIN=*********
-SENDGRID_PASSWORD=*********
-SENDGRID_USERNAME=*********
-TWILIO_AUTH_TOKEN=*********
-TWILIO_FROM=*********
-TWILIO_SID=*********
-```
-
-##### Write your first job
-
-Let's write a job that performs a count of one of your Keen IO collections and sends an email (or SMS) with the result. We'll set it to run every 24 hours.
-
-Create a file in the `jobs` folder called `first_job.rb` and paste in the following example:
-
-``` ruby
-require 'pushpop'
-
-job do
-
-  # how frequently do we want this job to run?
-  every 24.hours
-
-  # what keen io query should be performed?
-  keen do
-    event_collection  '<my-keen-collection-name>'
-    analysis_type     'count'
-    timeframe         'last_24_hours'
-  end
-
-  # use this block to send an email
-  sendgrid do |_, step_responses|
-    to      '<my-to-email-address>'
-    from    '<my-from-email-address>'
-    subject "There were #{step_responses['keen']} events in the last 24 hours!"
-    body    'We are blowing up!'
-  end
-  
-  # use this block to send an sms
-  twilio do |_, step_responses|
-    to    '<to-phone-number>'
-    body  "There were #{step_responses['keen']} events in the last 24 hours!"
-  end
-end
-```
-
-Now modify the example to use your query and contact information. You'll want to specify a `to` and a `from` address if you're using Sendgrid, and a `to` phone number if you're using Twilio. Everything you need to change is marked with `<>`. You'll also want to remove either Sendgrid or Twilio block if you're not using it.
-
-Save the file and test this job the `jobs:run_once` rake task:
-
-``` shell
-$ foreman run rake jobs:run_once[jobs/first_job.rb]
-```
-
-The output of each step will be logged to the console. If everything worked you'll receive an email or a text message within a few seconds!
+That's it. You're ready to add your own jobs to the jobs folder.
 
 ##### Next steps
 
-+ Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do. See [pushpop-recipes](https://github.com/pushpop-project/pushpop-recipes) for reusable code and inspiration!
++ Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do.
++ See [pushpop-recipes](https://github.com/pushpop-project/pushpop-recipes) for reusable code and inspiration.
 + Continue on to the [Deploy Guide](#deploy-guide) to deploy the job you just created.
 
 ## Deploy Guide
@@ -203,7 +145,7 @@ You'll need a [Heroku](https://heroku.com/) account, and the [Heroku toolbelt](h
 
 ##### Create a new Heroku app
 
-Make sure you're inside a Pushpop project directory, than create a new Heroku app.
+Make sure you're inside a Pushpop project directory (e.g. pushpop-starter), than create a new Heroku app.
 
 ``` shell
 $ heroku create
@@ -217,15 +159,6 @@ If you created a new job from the Quickstart guide, you'll want to commit that c
 
 ``` shell
 $ git commit -am 'Created my first Pushpop job'
-```
-
-##### Set Heroku config variables
-
-The easiest way to do this is with the [heroku-config](https://github.com/ddollar/heroku-config) plugin. This step assumes you have created a `.env` file containing your keys as demonstrated in the Quickstart guide.
-
-``` shell
-$ heroku plugins:install git://github.com/ddollar/heroku-config.git
-$ heroku config:push
 ```
 
 ##### Deploy code to Heroku
@@ -247,7 +180,7 @@ $ heroku logs --tail
 
 Note that if you have jobs that are set to run at specific times of day you might not see output for a while.
 
-Another note - by default this will run all jobs in the `jobs` folder. You might want to delete the `example_job.rb` file in a separate commit once you've got the hang of things.
+Another note - by default this will run all jobs in the `jobs` folder. You might want to delete the `example_job.rb` file in a separate commit once you've got the hang of things. You can change this behavior by editing the Procfile.
 
 #### Other environments
 
@@ -274,7 +207,7 @@ All `jobs:*` rake tasks optionally take a single filename as a parameter. The fi
 Specifying a specific file looks like this:
 
 ``` shell
-$ foreman run rake jobs:run[jobs/just_this_job.rb]
+$ bundle exec rake jobs:run[jobs/just_this_job.rb]
 ```
 
 Here's a list of the available rake tasks:
@@ -430,145 +363,9 @@ Here's a very simple template that uses the `response` variable in context:
 The community-driven [pushpop-recipes](https://github.com/pushpop-project/pushpop-recipes) repository contains jobs and templates
 for doing common things with Pushpop. Check it out for some inspiration!
 
-## Plugin Documentation
+## Plugins
 
-Plugins are located at `lib/plugins`. They can be included explicitly via:
-
-``` ruby
-Pushpop.load_plugin '<plugin_name>'
-```
-
-Pushpop will also attempt to auto-include them if a step name is invoked that isn't defined yet.
-
-##### Keen
-
-The `keen` plugin gives you a DSL to specify Keen query parameters. Those query parameters are used to query data using the [keen-gem](https://github.com/keenlabs/keen-gem).
-
-Here's an example that shows many of the options you can specify:
-
-``` ruby
-job 'average response time for successful requests last month' do
-
-  keen do
-    event_collection  'checks'
-    analysis_type     'average'
-    target_property   'request.duration'
-    group_by          'check.name'
-    interval          'daily'
-    timeframe         'last_month',
-    filters           [{ property_name: "response.successful",
-                         operator: "eq",
-                         property_value: true }]
-  end
-
-end
-```
-
-A `steps` method is also supported for [funnels](https://keen.io/docs/data-analysis/funnels/),
-as well as `analyses` for doing a [multi-analysis](https://keen.io/docs/data-analysis/multi-analysis/).
-
-The `keen` plugin requires that the following environment variables are set:
-  
-+ `KEEN_PROJECT_ID`
-+ `KEEN_READ_KEY`
-
-##### Sendgrid
-
-The `sendgrid` plugin gives you a DSL to specify typical email parameters.
-
-Here's an example:
-
-``` ruby
-job 'send an email' do
-
-  sendgrid do
-    to          'josh+pushpop@keen.io'
-    from        'pushpopapp+123@keen.io'
-    subject     'Is your inbox lonely?'
-    attachment  '/funny_images/sad_inbox.jpeg'
-    body        'This email was intentionally left blank.'
-    preview     false
-  end
-
-end
-```
-The `to`, `from`, and `subject` methods should be self-explanatory. All expect strings.
-
-The `body` method can take a string, or it can take the same parameters as the `template` method provided by the base step class. This example will use the rendered template contents as the body:
-
-``` ruby
-body 'pingpong_report.html.erb', response, step_responses
-```
-
-The `attachment` method is optional and takes a path to a file to be attached.
-
-The `preview` setting is optional and defaults to false. If you set it to true the email contents will print out
-to the console but the email will not be sent.
-
-The `sendgrid` plugin requires that the following environment variables are set: 
-
-+ `SENDGRID_DOMAIN`
-+ `SENDGRID_USERNAME`
-+ `SENDGRID_PASSWORD`
-
-##### Non-DSL methods
-
-Need to send multiple emails in one step? Need more control over email sending? The DSL approach won't be sufficient for you.
-Instead, use the `send_email` method exposed by the plugin directly. Here's an example:
-
-``` ruby
-job 'send multiple emails' do
-
-  step 'send some emails' do
-
-    ['josh+1@keen.io', 'justin+1@keen.io'].each do |to_address|
-      send_email to_address, 'pushpop-app@keen.io', 'Nice subject', 'Nice body'
-    end
-
-  end
-
-end
-```
-
-##### Twilio
-
-The `twilio` plugin provides a DSL to specify SMS recipient information as well as the message itself.
-
-Here's an example:
-
-``` ruby
-job 'send a text' do
-
-  twilio do
-    to    '+18005555555'
-    body  'Quick, move your car!'
-  end
-
-end
-```
-
-The `twilio` plugin requires that the following environment variables are set:
-
-+ `TWILIO_AUTH_TOKEN`
-+ `TWILIO_SID`
-+ `TWILIO_FROM`
-
-##### Non-DSL Methods
-
-If you need a lower level interface to Twilio functionality, use the `send_message` method exposed by the plugin directly. Here's an example:
-
-``` ruby
-job 'send a few texts' do
-
-  twilio do
-    ['+18005555555','+18005555556'].each do |to_number|
-      send_message(to_number, 'Quick, move your car!')
-    end
-  end
-
-end
-```
-
+Plugins are packaged as gems. See the [Pushpop organization](https://github.com/pushpop-project) page for a sampling of popular plugins.
 
 ## Creating plugins
 
