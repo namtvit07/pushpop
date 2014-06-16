@@ -98,6 +98,9 @@ The goal of the Quickstart is to get a Pushpop instance running locally and writ
 
 ##### Clone the Pushpop starter project
 
+The [pushpop-starter](https://github.com/pushpop-project/pushpop-starter) project is a repository with a few key files to help you get up and running quickly.
+Clone it to get started:
+
 ``` shell
 $ git clone git@github.com:pushpop-project/pushpop-starter.git
 ```
