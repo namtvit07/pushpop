@@ -34,8 +34,8 @@ See plugins for more services on the [Pushpop organization](https://github.com/p
  
 ##### Monitoring
 
-+ Web services and APIs
-+ Sensors
++ Track the performance of web services and APIs
++ Store sensors values for analysis and alerting
 
 #### Example Pushpop job
 
