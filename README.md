@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/pushpop-project/pushpop.svg)](https://travis-ci.org/pushpop-project/pushpop)
 
-### A framework for scheduled integrations
+### A framework for scheduled integrations between popular services
 
 <hr>
 <img src="http://f.cl.ly/items/1I421w263a10340a0u2q/Screen%20Shot%202014-04-16%20at%204.35.47%20PM.png" width="45%" alt="Pingpong Daily Response Time Report">
@@ -31,10 +31,15 @@ See plugins for more services on the [Pushpop organization](https://github.com/p
 
 + Send a sales report to your inbox every day at noon
 + Send analytics reports to your customers every week
+ 
+##### Monitoring
 
-#### An example Pushpop job
++ Web services and APIs
++ Sensors
 
-This Pushpop job uses the `keen` and `sendgrid` plugins to send a nightly email containing the day's number of pageviews:
+#### Example Pushpop job
+
+Pushpop organized work into jobs. Here's a Pushpop job that uses the `keen` and `sendgrid` plugins to send a nightly email. The email contains the day's number of pageviews:
 
 ``` ruby
 require 'pushpop-keen'
@@ -60,13 +65,13 @@ job do
 end
 ```
 
-The email is sent by [Sendgrid](https://sendgrid.com), made possible by the [sendgrid](https://github.com/pushpop-project/pushpop-sendgrid) Pushpop plugin.
+Keen IO provides the analytics data behind the report. The email is sent by [Sendgrid](https://sendgrid.com) via the [sendgrid](https://github.com/pushpop-project/pushpop-sendgrid) Pushpop plugin.
 
-Pushpop syntax is short and sweet, but because Pushpop is just Ruby it's also quite powerful.
+Pushpop syntax is short and sweet, but because Pushpop is pure Ruby it's also quite powerful.
 
 ### Get Started
 
-Excited to try out Pushpop with your Keen IO projects? Here's a few options to choose from:
+Excited to try out Pushpop on your own projects? Here's a few options to choose from:
 
 #### The Quickstart
 
@@ -99,6 +104,7 @@ The goal of the Quickstart is to get a Pushpop instance running locally and writ
 ##### Clone the Pushpop starter project
 
 The [pushpop-starter](https://github.com/pushpop-project/pushpop-starter) project is a repository with a few key files to help you get up and running quickly.
+
 Clone it to get started:
 
 ``` shell
@@ -128,7 +134,13 @@ Hey Pushpop, let's do a math!
 <pre>The number 30!</pre>
 ```
 
-That's it. You're ready to add your own jobs to the jobs folder.
+That's all there is to it. To run the job repeatedly at an interval, just change `run_once` to `run`:
+
+``` shell
+$ bundle exec rake jobs:run[jobs/example_job.rb]
+```
+
+Make sure to leave the process running in your terminal, or send it to the background.
 
 ##### Next steps
 
