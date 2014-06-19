@@ -71,7 +71,7 @@ module Pushpop
       end
 
       # log responses in debug
-      Pushpop.logger.info("#{name}: #{step_responses}")
+      Pushpop.logger.debug("#{name}: #{step_responses}")
 
       # return the last response and all responses
       [last_response, step_responses]
