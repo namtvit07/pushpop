@@ -213,6 +213,8 @@ $ bundle exec rake jobs:run
 
 Note: You probably want to monitor the process via something like [supervisord](http://supervisord.org/).
 
+Note #2: If you are on Windows foreman [won't work](https://github.com/pushpop-project/pushpop/issues/2). Here's a list of [foreman alternatives](http://nikolas.demiridis.gr/post/65679016070/heroku-for-windows-junkies-some-foreman-alternatives).
+
 ## Rake Tasks
 
 Pushpop comes with some rake tasks to make command line interaction and deployment easier.
