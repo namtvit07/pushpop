@@ -14,13 +14,15 @@
 
 ## Overview
 
-Pushpop is a simple but powerful Ruby gem that lets you share data between services at regular intervals.
-This can be used to do things like regular data collection as well as triggering alerts based on patterns in data.
+Pushpop is a powerful framework for taking actions and integrating services at regular intervals.
+This can be used to do anything from scheduled data collection to alerting based on patterns in data.
 
 Pushpop includes support for sending notifications and reports based on events captured with [Keen IO](https://keen.io).
 See plugins for more services on the [Pushpop organization](https://github.com/pushpop-project) home page.
 
-#### Ways to use Pushpop
+Pushpop is packaged as a Ruby gem. It can be added to existing Ruby projects or used in new ones.
+
+#### Ideas for using Pushpop
 
 ##### Alerts
 
@@ -103,7 +105,7 @@ The goal of the Quickstart is to get a Pushpop instance running locally and writ
 
 ##### Clone the Pushpop starter project
 
-The [pushpop-starter](https://github.com/pushpop-project/pushpop-starter) project is a repository with a few key files to help you get up and running quickly.
+[pushpop-starter](https://github.com/pushpop-project/pushpop-starter) is a template-style repository with a few key files to help you get up and running quickly.
 
 Clone it to get started:
 
@@ -134,7 +136,7 @@ Hey Pushpop, let's do a math!
 <pre>The number 30!</pre>
 ```
 
-That's all there is to it. To run the job repeatedly at an interval, just change `run_once` to `run`:
+That's all there is to it. To run the job repeatedly at the times specified by `every` just change `run_once` to `run`:
 
 ``` shell
 $ bundle exec rake jobs:run[jobs/example_job.rb]
@@ -202,18 +204,18 @@ Another note - by default this will run all jobs in the `jobs` folder. You might
 Pushpop is deployed as one long-running Ruby process. Anywhere you can run this process you can run Pushpop. Here's the command:
 
 ``` shell
-$ foreman run rake jobs:run
-```
-
-If you don't want to use foreman and prefer to set the environment variables yourself then all you need is this:
-
-``` shell
 $ bundle exec rake jobs:run
 ```
 
-Note: You probably want to monitor the process via something like [supervisord](http://supervisord.org/).
+Many of the Pushpop plugins require environment variables to communicate with other services. [foreman](https://github.com/ddollar/foreman), which is included in the Heroku toolbelt, provides a convenient idiom for storing environment variables in a .env file and loading them at runtime. Just add `foreman run` before the above command to run with the .env file loaded:
 
-Note #2: If you are on Windows foreman [won't work](https://github.com/pushpop-project/pushpop/issues/2). Here's a list of [foreman alternatives](http://nikolas.demiridis.gr/post/65679016070/heroku-for-windows-junkies-some-foreman-alternatives).
+``` shell
+$ foreman run bundle exec rake jobs:run
+```
+
+If you are on Windows foreman [won't work](https://github.com/pushpop-project/pushpop/issues/2). Here's a list of [foreman alternatives](http://nikolas.demiridis.gr/post/65679016070/heroku-for-windows-junkies-some-foreman-alternatives).
+
+Since this process should be long-lived you probably want to monitor the process via something like [supervisord](http://supervisord.org/).
 
 ## Rake Tasks
 
@@ -409,6 +411,8 @@ job do
 end
 ```
 
+See [pushpop-plugin](https://github.com/pushpop-project/pushpop-plugin) for a repository that you can clone to make creating and packaging plugins easier.
+
 ## Usage as a Ruby gem
 
 Pushpop can also be embedded in existing Ruby projects as a Ruby gem. Here's some steps on how to do that.
@@ -438,12 +442,11 @@ Pushpop.schedule
 Clockwork.manager.run
 ```
 
-The `pushpop` gem does not declare dependencies other than `clockwork` and `keen`. If you're using
-Pushpop plugins like Sendgrid or Twilio you'll need to bundle and require those dependencies separately.
+The `pushpop` gem does not declare dependencies other than `clockwork`. If you're using Pushpop plugins like Keen, Sendgrid or Twilio you'll need to add those to your gemfile and require them in job files.
 
 ## Contributing
 
-Issues and pull requests are very welcome!
+Issues and pull requests are very welcome. One of the goals of the pushpop-project is to get an many unique contributors as possible. Beginners welcome too!
 
 ##### Wishlist
 
