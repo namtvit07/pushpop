@@ -37,11 +37,11 @@ Pushpop is packaged as a Ruby gem. It can be added to existing Ruby projects or 
 ##### Monitoring
 
 + Track the performance of web services and APIs
-+ Store sensors values for analysis and alerting
++ Read sensor values for analysis and alerting
 
 #### Example Pushpop job
 
-Pushpop organized work into jobs. Here's a Pushpop job that uses the `keen` and `sendgrid` plugins to send a nightly email. The email contains the day's number of pageviews:
+Pushpop organizes work into jobs. Here's a Pushpop job that uses the `keen` and `sendgrid` plugins to send a nightly email. The email contains the day's number of pageviews:
 
 ``` ruby
 require 'pushpop-keen'
