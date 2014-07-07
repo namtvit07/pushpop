@@ -105,7 +105,7 @@ The goal of the Quickstart is to get a Pushpop instance running locally and writ
 
 ##### Clone the Pushpop starter project
 
-[pushpop-starter](https://github.com/pushpop-project/pushpop-starter) is a template-style repository with a few key files to help you get up and running quickly.
+[pushpop-starter](https://github.com/pushpop-project/pushpop-starter) is a template that contains a few boilerplate files and an example job.
 
 Clone it to get started:
 
@@ -123,7 +123,32 @@ $ bundle install
 
 ##### Test the included job
 
-There is an example job in `jobs/example_job.rb` of the pushpop-starter repository. It simply prints output to the console. Run this job via a rake task to make sure your configuration is setup properly.
+There is an example job in `jobs/example_job.rb` of the pushpop-starter repository. It simply prints output to the console. Here's the code behind the job:
+
+``` ruby
+require 'pushpop'
+
+job 'Simple Math' do
+
+  every 5.seconds
+
+  step 'return 10' do 10 end
+
+  step 'increase by 20' do |response|
+    20 + response
+  end
+
+  step 'print out via template' do |response|
+    html = template 'first_template.html.erb', response
+    puts 'Hey Pushpop, let\'s do a math!'
+    puts html
+    html
+  end
+
+end
+```
+
+Run this job via a rake task to make sure your configuration is setup properly.
 
 ``` shell
 $ bundle exec rake jobs:run_once[jobs/example_job.rb]
@@ -142,12 +167,12 @@ That's all there is to it. To run the job repeatedly at the times specified by `
 $ bundle exec rake jobs:run[jobs/example_job.rb]
 ```
 
-Make sure to leave the process running in your terminal, or send it to the background.
+Make sure to leave the process running in your terminal, or (send it to the background](http://stackoverflow.com/questions/625409/how-do-i-put-an-already-running-process-under-nohup), so that it keeps running.
 
 ##### Next steps
 
 + Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do.
-+ See [pushpop-recipes](https://github.com/pushpop-project/pushpop-recipes) for reusable code and inspiration.
++ See the [pushpop-project](https://github.com/pushpop-project) Github organization to find plugins and reusable code.
 + Continue on to the [Deploy Guide](#deploy-guide) to deploy the job you just created.
 
 ## Deploy Guide
@@ -234,7 +259,6 @@ Here's a list of the available rake tasks:
 + `jobs:describe` - Print out the names of jobs in the jobs folder.
 + `jobs:run_once` - Run each job once, right now.
 + `jobs:run` - Run jobs as scheduled in a long-running process. This is the task used when you deploy.
-+ `spec` - Run the specs.
 
 ## Pushpop API Documentation
 
@@ -245,8 +269,8 @@ Steps and jobs are the heart of the Pushpop workflow. Job files are written in p
 Jobs have the following attributes:
 
 + `name`: (optional) something that describe the job, useful in logs
-+ `period`: how frequently to run the job, first param to `every`
-+ `every_options` (optional): options related to when the job runs, second param to `every`
++ `period`: how frequently to run the job; the first param to `every`
++ `every_options` (optional): options related to when the job runs; the second param to `every`
 + `steps`: an ordered list of steps to run
 
 These attributes are easily specified using the DSL's block syntax. Here's an example:
@@ -263,9 +287,9 @@ end
 The name of this job is 'print job'. It runs every 5 minutes and it has 1 step.
 
 Inside of a `job` configuration block, steps are added by using the `step` method. They can also be
-added by using a method registered by a plugin, like `keen` or `twilio`. For more information on plugins see [Plugin Documentation](#plugin-documentation).
+added by using a method registered by a plugin, like `keen` or `twilio`. For more informatio on plugins see [Plugins](#plugins).
 
-The period of the job's execution is set via the `every` method. This is basically a passthrough to the [Clockwork](https://github.com/tomykaira/clockwork) long-running process scheduler. Here are some cool things you can do with regard to setting times and days:
+The period of the job's execution is set via the `every` method. This is a passthrough to the [Clockwork](https://github.com/tomykaira/clockwork) long-running process scheduler. Clockwork gives you a great deal of flexibility when it comes specifiying when jobs should run. Here are some examples:
 
 ``` ruby
 every 5.seconds
@@ -277,7 +301,7 @@ every 5.seconds, at: '10:**'
 every 1.week, at: 'Monday 12:30'
 ```
 
-See the full set of options on the [Clockwork README](https://github.com/tomykaira/clockwork#event-parameters).
+See the full range of possibilities on the [Clockwork README](https://github.com/tomykaira/clockwork#event-parameters).
 
 ##### Job workflow
 
@@ -288,6 +312,8 @@ The map is keyed by step name, which defaults to a plugin name if a plugin was u
 Here's an example that shows how the response chain works:
 
 ``` ruby
+require 'pushpop'
+
 job do
   every 5.minutes
   step 'one' do
@@ -297,7 +323,7 @@ job do
     5 + response
   end
   step 'add previous steps' do |response, step_responses|
-    puts response # prints 5
+    puts response # prints 6
     puts step_responses['one'] + step_responses['two'] # prints 6
   end
 end
@@ -306,6 +332,8 @@ end
 If a `step` returns false, subsequent steps **are not run**. Here's a simple example that illustrates this:
 
 ``` ruby
+require 'pushpop'
+
 job 'lame job' do
   every 5.minutes
   step 'one' do
@@ -321,6 +349,8 @@ This behavior is designed to make *conditional* alerting easy. Here's an example
 for certain query responses:
 
 ``` ruby
+require 'pushpop'
+
 job do
 
   every 1.minute
@@ -384,13 +414,15 @@ for doing common things with Pushpop. Check it out for some inspiration!
 
 ## Plugins
 
-Plugins are packaged as gems. See the [Pushpop organization](https://github.com/pushpop-project) page for a sampling of popular plugins.
+Plugins are packaged as gems. See the [pushpop-project](https://github.com/pushpop-project) github organization for a sampling of popular plugins.
 
-## Creating plugins
+### Creating plugins
 
 Plugins are just subclasses of `Pushpop::Step`. Plugins should implement a `run` method and register themselves. Here's a simple plugin that stops job execution if the input into the step is 0:
 
 ``` ruby
+require 'pushpop'
+
 module Pushpop
   class StopIfZero < Step
     PLUGIN_NAME = 'stop_if_zero'
@@ -434,19 +466,19 @@ Once the gem is available you can load or require Pushpop job files. Once each f
 ``` ruby
 load 'some_job.rb'
 
-# you could run the jobs once
+# run the jobs once
 Pushpop.run
 
-# or schedule and run the jobs with clockwork
+# or schedule the jobs with clockwork
 Pushpop.schedule
 Clockwork.manager.run
 ```
 
-The `pushpop` gem does not declare dependencies other than `clockwork`. If you're using Pushpop plugins like Keen, Sendgrid or Twilio you'll need to add those to your gemfile and require them in job files.
+Note: the `pushpop` gem does not declare dependencies other than `clockwork`. If you're using Pushpop plugins like Keen, Sendgrid or Twilio you'll need to add those to your `Gemfile` and require them in job files.
 
 ## Contributing
 
-Issues and pull requests are very welcome. One of the goals of the pushpop-project is to get an many unique contributors as possible. Beginners welcome too!
+Issues and pull requests are very welcome. One of the goals of the pushpop-project is to get as many unique contributors as possible. Beginners welcome too!
 
 ##### Wishlist
 
