@@ -11,4 +11,25 @@ describe Pushpop::CLI do
     expect(_).to be_empty
   end
 
+  describe 'with -v' do
+    it 'prints the version' do
+      _, options = start('-v')
+      expect(_).to match('Pushpop version')
+    end
+  end
+
+  describe 'jobs:describe' do
+    it 'prints job information' do
+      _, options = start('jobs:describe')
+      expect(_.name).to eq('Simple Math')
+    end
+  end
+
+  describe 'jobs:run_once' do
+    it 'runs jobs once' do
+      _, options = start('jobs:run_once')
+      expect(_.first).to match('The number')
+    end
+  end
+
 end
