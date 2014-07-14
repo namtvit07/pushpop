@@ -1,1 +1,1 @@
-worker: bundle exec rake jobs:run
+worker: pushpop jobs:run
