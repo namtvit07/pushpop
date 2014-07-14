@@ -23,7 +23,7 @@ module Pushpop
     file_options
 
     def describe_jobs
-      Dotenv.load!
+      Dotenv.load
       require_file(options[:file])
       Pushpop.jobs.tap do |jobs|
         jobs.each do |job|
@@ -37,7 +37,7 @@ module Pushpop
     file_options
 
     def run_jobs_once
-      Dotenv.load!
+      Dotenv.load
       require_file(options[:file])
       Pushpop.run
     end
@@ -47,7 +47,7 @@ module Pushpop
     file_options
 
     def run_jobs
-      Dotenv.load!
+      Dotenv.load
       require_file(options[:file])
       Pushpop.schedule
       Clockwork.manager.run
