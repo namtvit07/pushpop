@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'clockwork'
+gemspec
 
 group :development, :test do
   gem 'rake'

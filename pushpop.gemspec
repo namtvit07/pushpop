@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.description = "Pushpop is a powerful framework for taking actions and integrating services at regular intervals."
 
   s.add_dependency "clockwork"
+  s.add_dependency "thor"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

@@ -3,6 +3,7 @@ require 'clockwork'
 require 'pushpop/version'
 require 'pushpop/job'
 require 'pushpop/step'
+require 'pushpop/cli'
 
 module Pushpop
   class << self
