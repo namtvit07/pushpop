@@ -20,15 +20,15 @@ describe Pushpop::CLI do
 
   describe 'jobs:describe' do
     it 'prints job information' do
-      _, options = start('jobs:describe')
+      _, options = start('jobs:describe --file spec/jobs')
       expect(_.name).to eq('Simple Math')
     end
   end
 
   describe 'jobs:run_once' do
     it 'runs jobs once' do
-      _, options = start('jobs:run_once')
-      expect(_.first).to match('The number')
+      _, options = start('jobs:run_once --file spec/jobs')
+      expect(_.first).to equal(30)
     end
   end
 

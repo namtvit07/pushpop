@@ -17,7 +17,7 @@
 Pushpop is a powerful framework for taking actions and integrating services at regular intervals.
 This can be used to do anything from scheduled data collection to alerting based on patterns in data.
 
-Pushpop includes support for sending notifications and reports based on events captured with [Keen IO](https://keen.io).
+Pushpop began as a way to send notifications and reports based on events captured with [Keen IO](https://keen.io).
 See plugins for more services on the [Pushpop organization](https://github.com/pushpop-project) home page.
 
 Pushpop is packaged as a Ruby gem. It can be added to existing Ruby projects or used in new ones.
@@ -71,59 +71,29 @@ Keen IO provides the analytics data behind the report. The email is sent by [Sen
 
 Pushpop syntax is short and sweet, but because Pushpop is pure Ruby it's also quite powerful.
 
-### Get Started
-
-Excited to try out Pushpop on your own projects? Here's a few options to choose from:
-
-#### The Quickstart
-
-Setup Pushpop locally and run your first job in minutes.
-
-**[Go to the Quickstart](#quickstart)**
-
-#### Deploy a Pushpop Instance
-
-Ready to deploy a local Pushpop job? Detailed instructions for Heroku are provided as well as a basic guide for other platforms.
-
-**[Go to the Deploy Guide](#deploy-guide)**
-
-#### Need help?
-
-Don't have a hacker on hand? The friendly folks at Keen IO can set a Pushpop up for you.
-
-**Email [team@keen.io](mailto:team@keen.io?subject=I want a Pushpop!)** with the subject "I want a Pushpop!". Include information about what queries you'd like to run (and when) and how you'd like the results communicated.
-
 ## Quickstart
 
-The goal of the Quickstart is to get a Pushpop instance running locally and write your first job. This should take less than 10 minutes.
+Install Pushpop as a Ruby gem:
 
-#### Prerequisites
-
-+ A working [Ruby installation](https://www.ruby-lang.org/en/installation/) (1.9+)
-
-#### Steps
-
-##### Clone the Pushpop starter project
-
-[pushpop-starter](https://github.com/pushpop-project/pushpop-starter) is a template that contains a few boilerplate files and an example job.
-
-Clone it to get started:
-
-``` shell
-$ git clone git@github.com:pushpop-project/pushpop-starter.git
+```
+$ gem install pushpop
 ```
 
-Enter the `pushpop-starter` directory and install dependencies.
+You should now have a `pushpop` command available in your shell. Try it out with no arguments to see a list of possible commands:
 
-``` shell
-$ cd pushpop-starter
-$ gem install bundler
-$ bundle install
+```
+$ pushpop
+Commands:
+  pushpop help [COMMAND]  # Describe available commands or one specific command
+  pushpop jobs:describe   # Describe jobs
+  pushpop jobs:run        # Run jobs ongoing
+  pushpop jobs:run_once   # Run jobs once
+  pushpop version         # Print the Pushpop version
 ```
 
-##### Test the included job
+##### Create a simple job
 
-There is an example job in `jobs/example_job.rb` of the pushpop-starter repository. It simply prints output to the console. Here's the code behind the job:
+Copy the code below into a file called `example_job.rb`. This job simply prints output to the console:
 
 ``` ruby
 require 'pushpop'
@@ -148,10 +118,10 @@ job 'Simple Math' do
 end
 ```
 
-Run this job via a rake task to make sure your configuration is setup properly.
+Run this job once via using the `jobs:run_once` command:
 
 ``` shell
-$ bundle exec rake jobs:run_once[jobs/example_job.rb]
+$ pushpop jobs:run_once --file example_job.rb
 ```
 
 You should see the following output (followed by a logging statement):
@@ -164,7 +134,7 @@ Hey Pushpop, let's do a math!
 That's all there is to it. To run the job repeatedly at the times specified by `every` just change `run_once` to `run`:
 
 ``` shell
-$ bundle exec rake jobs:run[jobs/example_job.rb]
+$ pushpop jobs:run --file example_job.rb
 ```
 
 Make sure to leave the process running in your terminal, or (send it to the background](http://stackoverflow.com/questions/625409/how-do-i-put-an-already-running-process-under-nohup), so that it keeps running.
@@ -173,92 +143,24 @@ Make sure to leave the process running in your terminal, or (send it to the back
 
 + Write and test more jobs. See the [Pushpop API Documentation](#pushpop-api-documentation) below for more examples of what you can do.
 + See the [pushpop-project](https://github.com/pushpop-project) Github organization to find plugins and reusable code.
-+ Continue on to the [Deploy Guide](#deploy-guide) to deploy the job you just created.
 
-## Deploy Guide
+## Pushpop Commands
 
-#### Heroku
+Pushpop comes with commands to describe and run jobs.
 
-These instructions are for Heroku, but should be relevant to most environments.
-
-##### Prerequisites
-
-You'll need a [Heroku](https://heroku.com/) account, and the [Heroku toolbelt](https://toolbelt.heroku.com/) installed.
-
-##### Create a new Heroku app
-
-Make sure you're inside a Pushpop project directory (e.g. pushpop-starter), than create a new Heroku app.
-
-``` shell
-$ heroku create
-```
-
-This will create a Heroku app and add a new git remote destination called `heroku` to your git configuration.
-
-##### Commit changes
-
-If you created a new job from the Quickstart guide, you'll want to commit that code before deploying.
-
-``` shell
-$ git commit -am 'Created my first Pushpop job'
-```
-
-##### Deploy code to Heroku
-
-Now that your code is commited and config variables pushed we can begin a deploy. We'll also need to scale the number of worker processes to 1.
-
-``` shell
-$ git push heroku master
-$ heroku scale worker=1
-```
-
-##### Tail logs to confirm it's working
-
-To see that jobs are running and that there are no errors, tail the logs on Heroku.
-
-``` shell
-$ heroku logs --tail
-```
-
-Note that if you have jobs that are set to run at specific times of day you might not see output for a while.
-
-Another note - by default this will run all jobs in the `jobs` folder. You might want to delete the `example_job.rb` file in a separate commit once you've got the hang of things. You can change this behavior by editing the Procfile.
-
-#### Other environments
-
-Pushpop is deployed as one long-running Ruby process. Anywhere you can run this process you can run Pushpop. Here's the command:
-
-``` shell
-$ bundle exec rake jobs:run
-```
-
-Many of the Pushpop plugins require environment variables to communicate with other services. [foreman](https://github.com/ddollar/foreman), which is included in the Heroku toolbelt, provides a convenient idiom for storing environment variables in a .env file and loading them at runtime. Just add `foreman run` before the above command to run with the .env file loaded:
-
-``` shell
-$ foreman run bundle exec rake jobs:run
-```
-
-If you are on Windows foreman [won't work](https://github.com/pushpop-project/pushpop/issues/2). Here's a list of [foreman alternatives](http://nikolas.demiridis.gr/post/65679016070/heroku-for-windows-junkies-some-foreman-alternatives).
-
-Since this process should be long-lived you probably want to monitor the process via something like [supervisord](http://supervisord.org/).
-
-## Rake Tasks
-
-Pushpop comes with some rake tasks to make command line interaction and deployment easier.
-
-All `jobs:*` rake tasks optionally take a single filename as a parameter. The file is meant to contain one or more Pushpop jobs. If no filename is specified, all jobs in the jobs folder are required.
+All `jobs:*` commands optionally take a filename or directory as a `--file` or `-f` parameter. The file/directory is meant to contain one or more Pushpop jobs.
 
 Specifying a specific file looks like this:
 
 ``` shell
-$ bundle exec rake jobs:run[jobs/just_this_job.rb]
+$ pushpop jobs:run --file jobs/just_this_job.rb
 ```
 
-Here's a list of the available rake tasks:
+Here's a list of the available commands:
 
 + `jobs:describe` - Print out the names of jobs in the jobs folder.
 + `jobs:run_once` - Run each job once, right now.
-+ `jobs:run` - Run jobs as scheduled in a long-running process. This is the task used when you deploy.
++ `jobs:run` - Run jobs as scheduled in a long-running process. This is the command you should use for a deployed Pushpop.
 
 ## Pushpop API Documentation
 
@@ -445,37 +347,6 @@ end
 
 See [pushpop-plugin](https://github.com/pushpop-project/pushpop-plugin) for a repository that you can clone to make creating and packaging plugins easier.
 
-## Usage as a Ruby gem
-
-Pushpop can also be embedded in existing Ruby projects as a Ruby gem. Here's some steps on how to do that.
-
-##### Install the gem
-
-``` ruby
-# bundler
-gem 'pushpop'
-
-# not bundler
-gem install 'pushpop'
-```
-
-##### Require job files and run
-
-Once the gem is available you can load or require Pushpop job files. Once each file loads the jobs it contains are ready to be run or scheduled. Here's that sequence:
-
-``` ruby
-load 'some_job.rb'
-
-# run the jobs once
-Pushpop.run
-
-# or schedule the jobs with clockwork
-Pushpop.schedule
-Clockwork.manager.run
-```
-
-Note: the `pushpop` gem does not declare dependencies other than `clockwork`. If you're using Pushpop plugins like Keen, Sendgrid or Twilio you'll need to add those to your `Gemfile` and require them in job files.
-
 ## Contributing
 
 Issues and pull requests are very welcome. One of the goals of the pushpop-project is to get as many unique contributors as possible. Beginners welcome too!
@@ -494,10 +365,3 @@ Please make sure the specs pass before you submit your pull request. Pushpop has
 ``` shell
 $ bundle exec rake spec
 ```
-
-## Inspirations
-
-> "Technology shouldn't require all of our attention, just some of it, and only when necessary."
-> [calmtechnology.com](http://calmtechnology.com/)
-
-Dashboards and reports are human presentation vehicles. They require our attention in order to gain meaning. That's great when we're actively seeking answers and want to explore. But as a means to become aware of interesting, timely events it's neither effective nor efficient. A tool like Pushpop works better in those cases. It's a calmer technology.
