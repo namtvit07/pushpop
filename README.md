@@ -137,7 +137,7 @@ That's all there is to it. To run the job repeatedly at the times specified by `
 $ pushpop jobs:run --file example_job.rb
 ```
 
-Make sure to leave the process running in your terminal, or (send it to the background](http://stackoverflow.com/questions/625409/how-do-i-put-an-already-running-process-under-nohup), so that it keeps running.
+Make sure to leave the process running in your terminal, or [send it to the background](http://stackoverflow.com/questions/625409/how-do-i-put-an-already-running-process-under-nohup), so that it keeps running.
 
 ##### Next steps
 
@@ -161,6 +161,8 @@ Here's a list of the available commands:
 + `jobs:describe` - Print out the names of jobs in the jobs folder.
 + `jobs:run_once` - Run each job once, right now.
 + `jobs:run` - Run jobs as scheduled in a long-running process. This is the command you should use for a deployed Pushpop.
+
+All `jobs:*` tasks also use [dotenv](https://github.com/bkeepers/dotenv) to load environment variables, often contained in a `.env` file.
 
 ## Pushpop API Documentation
 
