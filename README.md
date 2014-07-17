@@ -98,22 +98,15 @@ Copy the code below into a file called `example_job.rb`. This job simply prints 
 ``` ruby
 require 'pushpop'
 
-job 'Simple Math' do
+job do
 
-  every 5.seconds
-
-  step 'return 10' do 10 end
-
-  step 'increase by 20' do |response|
-    20 + response
+  every 1.seconds
+  
+  step do 
+    puts 'Hello World!'
   end
-
-  step 'print out via template' do |response|
-    html = template 'first_template.html.erb', response
-    puts 'Hey Pushpop, let\'s do a math!'
-    puts html
-    html
-  end
+  
+end
 
 end
 ```
@@ -124,11 +117,10 @@ Run this job once via using the `jobs:run_once` command:
 $ pushpop jobs:run_once --file example_job.rb
 ```
 
-You should see the following output (followed by a logging statement):
+You should see the following output:
 
 ``` html
-Hey Pushpop, let's do a math!
-<pre>The number 30!</pre>
+Hello World!
 ```
 
 That's all there is to it. To run the job repeatedly at the times specified by `every` just change `run_once` to `run`:
