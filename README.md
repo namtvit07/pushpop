@@ -101,12 +101,10 @@ require 'pushpop'
 job do
 
   every 1.seconds
-  
-  step do 
+
+  step do
     puts 'Hello World!'
   end
-  
-end
 
 end
 ```
