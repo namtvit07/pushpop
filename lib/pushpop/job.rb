@@ -4,8 +4,11 @@ module Pushpop
 
     class << self
 
-      cattr_accessor :plugins
-      self.plugins = {}
+      @@plugins = {}
+
+      def plugins
+        @@plugins
+      end
 
       def register_plugin(name, klass)
         self.plugins ||= {}

@@ -7,15 +7,33 @@ require 'pushpop/cli'
 
 module Pushpop
   class << self
-    cattr_accessor :logger
-    cattr_accessor :jobs
+
+    @@jobs = []
+
+    @@logger = lambda {
+      logger = Logger.new($stdout)
+      if ENV['DEBUG']
+        logger.level = Logger::DEBUG
+      elsif ENV['RACK_ENV'] == 'test'
+        logger.level = Logger::FATAL
+      else
+        logger.level = Logger::INFO
+      end
+      logger
+    }.call
+
+    def logger
+      @@logger
+    end
+
+    def jobs
+      @@jobs
+    end
 
     # for jobs and steps
     def random_name
       (0...8).map { (65 + rand(26)).chr }.join
     end
-
-    self.jobs = []
 
     def add_job(name=nil, &block)
       self.jobs.push(Job.new(name, &block))
@@ -40,16 +58,3 @@ end
 def job(name=nil, &block)
   Pushpop.add_job(name, &block)
 end
-
-Pushpop.logger = lambda {
-  logger = Logger.new($stdout)
-  if ENV['DEBUG']
-    logger.level = Logger::DEBUG
-  elsif ENV['RACK_ENV'] == 'test'
-    logger.level = Logger::FATAL
-  else
-    logger.level = Logger::INFO
-  end
-  logger
-}.call
-
