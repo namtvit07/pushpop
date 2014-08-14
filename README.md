@@ -14,8 +14,7 @@
 
 ## Overview
 
-Pushpop is a powerful framework for taking actions and integrating services at regular intervals.
-This can be used to do anything from scheduled data collection to alerting based on patterns in data.
+Use Pushpop to schedule and run ongoing integrations between your favorite services. With Pushpop you can easily say "send data from Service A to Service B every 5 minutes". The services and the interval are entirely configurable, and you can have as many steps as you like.
 
 Pushpop began as a way to send notifications and reports based on events captured with [Keen IO](https://keen.io).
 See plugins for more services on the [Pushpop organization](https://github.com/pushpop-project) home page.
